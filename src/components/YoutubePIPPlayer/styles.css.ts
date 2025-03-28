@@ -1,14 +1,24 @@
 import { globalStyle, style } from "@vanilla-extract/css"
 import { theme } from "@design-system/theme/theme.css"
 
+export const container = style({
+  position: "relative"
+})
 export const youtubePlayerContainer = style({
   position: "absolute",
   width: "fit-content",
-  padding: "0.4rem"
+  padding: "0.4rem",
+  opacity: 1,
+  transition: "opacity 4s ease",
+  maxWidth: "100%"
 })
 
 export const youtubePlayerContainerMoveTransition = style({
-  transition: "top 0.3s ease, left 0.3s ease"
+  transition: "top 0.3s ease, left 0.3s ease, opacity 0.3s ease"
+})
+
+export const youtubePlayerContainerHidden = style({
+  opacity: 0
 })
 
 export const youtubePlayer = style({
@@ -21,6 +31,7 @@ export const youtubePlayer = style({
   borderRadius: theme.spaces.small,
   transition: "opacity 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease",
   boxShadow: `0 0 0 0.05rem transparent inset`,
+  maxWidth: "100%",
   "@media": {
     "screen and (max-width: 480px)": {
       backdropFilter: "blur(10rem)",
@@ -32,6 +43,7 @@ export const youtubePlayer = style({
 export const youtubeWrapper = style({
   position: "relative",
   zIndex: `calc(${theme.zIndices.overlay} + 1)`,
+  maxWidth: "100%"
 })
 
 globalStyle(`${youtubePlayerContainer}:hover > ${youtubePlayer}`, {

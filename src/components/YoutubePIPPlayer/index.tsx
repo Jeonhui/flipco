@@ -1,26 +1,33 @@
-import { ChangeEvent, MouseEventHandler, useEffect, useRef, useState } from "react"
-import { useIsClient } from "@design-system/hooks"
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  MouseEventHandler,
+  ChangeEvent
+} from "react"
 import YouTube, { YouTubeEvent } from "react-youtube"
-import { clsx } from "clsx"
-import * as styles from "./styles.css"
+import clsx from "clsx"
+import * as styles from "./styles.css" // 스타일 파일 경로 맞게 수정
 import { Button, Container } from "@design-system/components"
 import { HideIcon, ShowIcon } from "@/assets/icons"
+import { useIsClient } from "@design-system/hooks"
 import { Property } from "csstype"
 
 type YoutubePlayerProps = {
+  containerClassName?: string
   videoId?: string
 }
 
 type ResizePosition =
-  "topLeft"
-  | "top"
-  | "topRight"
-  | "right"
-  | "bottomRight"
-  | "bottom"
-  | "bottomLeft"
-  | "left"
   | "none"
+  | "top"
+  | "bottom"
+  | "left"
+  | "right"
+  | "topLeft"
+  | "topRight"
+  | "bottomLeft"
+  | "bottomRight"
 
 const resizePositionToCursor = (position: ResizePosition): Property.Cursor => {
   switch (position) {
@@ -41,10 +48,11 @@ const resizePositionToCursor = (position: ResizePosition): Property.Cursor => {
   }
 }
 
-const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
+const YoutubePIP = ({ containerClassName, videoId }: YoutubePlayerProps) => {
   const isClient = useIsClient()
-
+  const containerRef = useRef<HTMLDivElement>(null)
   const dragOverlayRef = useRef<HTMLDivElement>(null)
+
   const [isReady, setIsReady] = useState(false)
   const [isSetup, setIsSetup] = useState(false)
 
@@ -60,7 +68,6 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
   const [size, setSize] = useState({ width: 320, height: 180 })
   const [opacity, setOpacity] = useState<number>(100)
 
-  // MARK: - Dragging Event Handlers
   const onDraggingMouseDown = (e: React.MouseEvent) => {
     setDragging(true)
     const rect = dragOverlayRef.current?.getBoundingClientRect()
@@ -70,7 +77,6 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
     })
   }
 
-  // MARK: - Resizing Event Handlers
   const onResizingMouseDown = () => {
     const rect = dragOverlayRef.current?.getBoundingClientRect()
     if (rect) setInitialRect(rect)
@@ -90,26 +96,31 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
     const nearLeft = x < EDGE
     const nearRight = x > rect.width - EDGE
 
-    if (nearTop) setResizingPosition("top")
-    if (nearBottom) setResizingPosition("bottom")
-    if (nearLeft) setResizingPosition("left")
-    if (nearRight) setResizingPosition("right")
     if (nearTop && nearLeft) setResizingPosition("topLeft")
-    if (nearTop && nearRight) setResizingPosition("topRight")
-    if (nearBottom && nearLeft) setResizingPosition("bottomLeft")
-    if (nearBottom && nearRight) setResizingPosition("bottomRight")
+    else if (nearTop && nearRight) setResizingPosition("topRight")
+    else if (nearBottom && nearLeft) setResizingPosition("bottomLeft")
+    else if (nearBottom && nearRight) setResizingPosition("bottomRight")
+    else if (nearTop) setResizingPosition("top")
+    else if (nearBottom) setResizingPosition("bottom")
+    else if (nearLeft) setResizingPosition("left")
+    else if (nearRight) setResizingPosition("right")
+    else setResizingPosition("none")
   }
 
   useEffect(() => {
     if (!isClient || isSetup) return
-    if (window.innerWidth <= 480) {
-      const width = window.innerWidth - 25.6
+    const containerRect = containerRef.current?.getBoundingClientRect()
+    if (!containerRect) return
+
+    const padding = 25.6
+    if (containerRect.width <= 480) {
+      const width = containerRect.width - padding
       const height = width * 9 / 16
-      const top = window.innerHeight - (height + 25.6 + 32)
-      setSize({ width: width, height: height })
+      const top = containerRect.height - (height + padding + 32)
+      setSize({ width, height })
       setPosition({ x: 0, y: top })
     } else {
-      const top = window.innerHeight - (size.height + 25.6 + 32)
+      const top = containerRect.height - (size.height + padding + 32 + 32)
       setPosition({ x: 20, y: top })
     }
     setIsSetup(true)
@@ -118,9 +129,12 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
   useEffect(() => {
     if (!isClient) return
     const onMouseMove = (e: MouseEvent) => {
+      const containerRect = containerRef.current?.getBoundingClientRect()
+      if (!containerRect) return
+
       if (dragging) {
-        const offsetX = e.clientX - offset.x
-        const offsetY = e.clientY - offset.y
+        const offsetX = e.clientX - offset.x - containerRect.left
+        const offsetY = e.clientY - offset.y - containerRect.top
         const boxSize = dragOverlayRef.current?.getBoundingClientRect() ?? {
           width: size.width,
           height: size.height + 32
@@ -130,15 +144,12 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
           height: boxSize.height + 12.8
         }
 
-        const maxX = window.innerWidth - boxSizeWithPadding.width
-        const maxY = window.innerHeight - boxSizeWithPadding.height
+        const maxX = containerRect.width - boxSizeWithPadding.width
+        const maxY = containerRect.height - boxSizeWithPadding.height
 
         const newX = Math.min(Math.max(0, offsetX), maxX)
         const newY = Math.min(Math.max(0, offsetY), maxY)
-        setPosition({
-          x: newX,
-          y: newY
-        })
+        setPosition({ x: newX, y: newY })
       } else if (resizing) {
         const rect = dragOverlayRef.current?.getBoundingClientRect()
         if (!rect) return
@@ -152,63 +163,70 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
         let newHeight = size.height
 
         const applyHorizontal = (direction: "left" | "right") => {
-          if (direction === "left") {
-            if (initialRect) {
-              newWidth = initialRect.right - e.clientX
-              newX = initialRect.right - (newWidth + 12.8)
+          if (direction === "left" && initialRect) {
+            const proposedWidth = initialRect.right - e.clientX
+            const proposedX = initialRect.right - (proposedWidth + 12.8) - containerRect.left
+
+            const maxWidth = initialRect.right - containerRect.left // ← 오른쪽 고정
+            if (proposedWidth >= minWidth && proposedX >= 0 && proposedWidth <= maxWidth) {
+              newWidth = proposedWidth
+              newX = proposedX
             }
-          } else {
-            newWidth = e.clientX - rect.left
+          }
+
+          if (direction === "right") {
+            const proposedWidth = e.clientX - rect.left
+            const maxWidth = containerRect.width - newX - 25.6
+            if (proposedWidth >= minWidth && proposedWidth <= maxWidth) {
+              newWidth = proposedWidth
+            }
           }
         }
 
         const applyVertical = (direction: "top" | "bottom") => {
-          if (direction === "top") {
-            if (initialRect) {
-              newHeight = initialRect.bottom - e.clientY - 32
-              newY = initialRect.bottom - (newHeight + 32 + 12.8)
+          if (direction === "top" && initialRect) {
+            const proposedHeight = initialRect.bottom - e.clientY - 32
+            const proposedY = initialRect.bottom - (proposedHeight + 32 + 12.8) - containerRect.top
+
+            const maxHeight = initialRect.bottom - containerRect.top
+            if (proposedHeight >= minHeight && proposedY >= 0 && proposedHeight <= maxHeight) {
+              newHeight = proposedHeight
+              newY = proposedY
             }
-          } else {
-            newHeight = e.clientY - 32 - rect.top
+          }
+
+          if (direction === "bottom") {
+            const proposedHeight = e.clientY - 32 - rect.top
+            const maxHeight = containerRect.height - newY - 25.6 - 32
+            if (proposedHeight >= minHeight && proposedHeight <= maxHeight) {
+              newHeight = proposedHeight
+            }
           }
         }
+
 
         if (resizingPosition.toLowerCase().includes("left")) applyHorizontal("left")
         if (resizingPosition.toLowerCase().includes("right")) applyHorizontal("right")
         if (resizingPosition.toLowerCase().includes("top")) applyVertical("top")
         if (resizingPosition.toLowerCase().includes("bottom")) applyVertical("bottom")
-        const maxWidth = window.innerWidth - newX - 25.6
-        const maxHeight = window.innerHeight - newY - 25.6 - 32
-        const maxX = window.innerWidth - newWidth - 25.6
-        const maxY = window.innerHeight - newHeight - 32 - 25.6
 
-        if (minWidth > newWidth || newWidth > maxWidth) {
-          return
-        }
-        if (minHeight > newHeight || newHeight > maxHeight) {
-          return
-        }
-        if (newX < 0 || newX > maxX) {
-          return
-        }
-        if (newY < 0 || newY > maxY) {
-          return
-        }
         setSize({ width: newWidth, height: newHeight })
         setPosition({ x: newX, y: newY })
       }
     }
+
     const onMouseUp = () => {
       setDragging(false)
       setResizing(false)
     }
+
     window.addEventListener("mousemove", onMouseMove)
     window.addEventListener("mouseup", onMouseUp)
     return () => {
       window.removeEventListener("mousemove", onMouseMove)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [dragging, resizing, offset, isClient, size, position.x, position.y, resizingPosition, initialRect])
+  }, [dragging, resizing, offset, isClient, size, position, resizingPosition, initialRect])
 
   const onYoutubeReady = (e: YouTubeEvent) => {
     e.target.playVideo()
@@ -230,8 +248,9 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
         width: boxSize.width + 12.8,
         height: boxSize.height + 12.8
       }
+      const containerLeft = containerRef.current?.getBoundingClientRect().left ?? 0
       return {
-        x: -(boxSizeWithPadding.width),
+        x: -(boxSizeWithPadding.width + containerLeft),
         y: prev.y
       }
     })
@@ -246,12 +265,12 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
     setOpacity(Number(e.target.value))
   }
 
-  if (!isClient) {
-    return null
-  }
+  if (!isClient) return null
 
   return (
-    <>
+    <div
+      ref={containerRef}
+      className={clsx(styles.container, containerClassName)}>
       <Button
         className={clsx(
           styles.showButton,
@@ -271,6 +290,7 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
       </Button>
       <div
         className={clsx(styles.youtubePlayerContainer, {
+          [styles.youtubePlayerContainerHidden]: isHidden,
           [styles.youtubePlayerContainerMoveTransition]: isReady && !dragging && !resizing
         })}
         style={{
@@ -342,8 +362,8 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export default YoutubePlayer
+export default YoutubePIP
