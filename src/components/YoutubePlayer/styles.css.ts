@@ -7,6 +7,10 @@ export const youtubePlayerContainer = style({
   padding: "0.4rem"
 })
 
+export const youtubePlayerContainerMoveTransition = style({
+  transition: "top 0.3s ease, left 0.3s ease"
+})
+
 export const youtubePlayer = style({
   position: "relative",
   width: "fit-content",
@@ -171,4 +175,22 @@ export const youtubeErrorContainer = style({
   ...theme.alignments.columnCenter,
   backgroundColor: theme.colorSet.gray800,
   boxShadow: `0 0 0 0.05rem ${theme.colors.text.textDim4} inset`
+})
+
+export const showButton = style({
+  position: "absolute",
+  left: "1rem",
+  opacity: 0,
+  pointerEvents: "none",
+  transition: "opacity 0.3s ease",
+})
+
+export const showButtonVisible = style({
+  opacity: 1,
+  pointerEvents: "auto"
+})
+
+export const showButtonIcon = style({
+  width: "2rem",
+  height: "3rem !important",
 })

@@ -7,24 +7,28 @@ import * as styles from "./styles.css"
 type ButtonProps = {
   children: React.ReactNode
   className?: string
+  style?: React.CSSProperties
   alignment?: keyof typeof styles.buttonAlignmentVariants
   color?: keyof typeof styles.buttonColorVariants
   size?: keyof typeof styles.buttonSizeVariants
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
   onClick?: () => void
+  onMouseDown?: () => void
 }
 
 const Button = (
   {
     children,
     className,
+    style,
     leftIcon,
     rightIcon,
     alignment = "rowCenter",
     color = "default",
     size = "medium",
     onClick,
+    onMouseDown,
     ...props
   }: ButtonProps,
   ref: Ref<HTMLButtonElement>,
@@ -36,6 +40,7 @@ const Button = (
   return (
     <button
       ref={ref}
+      style={style}
       className={clsx(
         className,
         styles.button,
@@ -45,6 +50,7 @@ const Button = (
       )}
       {...props}
       onClick={onClickHandler}
+      onMouseDown={onMouseDown}
     >
       {leftIcon}
       {children}

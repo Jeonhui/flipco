@@ -15,6 +15,7 @@ type IconProps = {
   height?: Height
   fillWidth?: boolean
   fillHeight?: boolean
+  preserveAspectRatio?: string
   aspectRatioOne?: boolean
   fill?: Fill
   stroke?: Stroke
@@ -23,34 +24,36 @@ type IconProps = {
 
 type IconWithChildrenProps = PropsWithChildren<
   IconProps & {
-    viewBox?: string
-  }
+  viewBox?: string
+}
 >
 
 const Icon = ({
-  children,
-  viewBox,
-  className,
-  width,
-  height,
-  fillWidth,
-  fillHeight,
-  aspectRatioOne,
-  fill,
-  ...props
-}: IconWithChildrenProps) => {
+                children,
+                viewBox,
+                className,
+                width,
+                height,
+                fillWidth,
+                fillHeight,
+                preserveAspectRatio,
+                aspectRatioOne,
+                fill,
+                ...props
+              }: IconWithChildrenProps) => {
   return (
     <svg
       viewBox={viewBox}
       fill={fill}
+      preserveAspectRatio={preserveAspectRatio}
       style={{
         width: width,
-        height: height,
+        height: height
       }}
       className={clsx(className, {
         [styles.fillWidth]: width === undefined && fillWidth,
         [styles.fillHeight]: height === undefined && fillHeight,
-        [styles.aspectRatioOne]: aspectRatioOne,
+        [styles.aspectRatioOne]: aspectRatioOne
       })}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
