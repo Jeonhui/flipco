@@ -7,7 +7,6 @@ import * as styles from "./styles.css"
 
 export default function BackgroundVideoPlayer() {
   const isClient = useIsClient()
-  const [isReady, setIsReady] = React.useState(false)
 
   if (!isClient) {
     return null

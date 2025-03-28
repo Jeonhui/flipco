@@ -6,7 +6,7 @@ import * as styles from "./styles.css"
 import { Button, Container, Text } from "@design-system/components"
 
 interface YoutubePlayerProps {
-  videoId: string
+  videoId?: string
 }
 
 const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
@@ -124,10 +124,6 @@ const YoutubePlayer = ({ videoId }: YoutubePlayerProps) => {
             value={opacity}
             onChange={onOpacityChange}
           />
-          {/*<div*/}
-          {/*  className={clsx("resize-handle", styles.resizeButton)}*/}
-          {/*  onMouseDown={onMouseDown}*/}
-          {/*/>*/}
         </Container>
         <div
           className={clsx(styles.youtubeWrapper)}

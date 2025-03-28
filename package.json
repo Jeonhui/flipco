@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next export",
+    "deploy": "pnpm build && pnpm export && gh-pages -d out"
   },
   "peerDependencies": {
     "@design-system": "workspace:*",

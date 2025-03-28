@@ -2,7 +2,6 @@
 
 import React from "react"
 import {
-  Container,
   Layout,
   Section,
 } from "@design-system/components"

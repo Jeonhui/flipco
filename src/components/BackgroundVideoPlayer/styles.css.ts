@@ -1,4 +1,4 @@
-import { globalStyle, style } from "@vanilla-extract/css"
+import { style } from "@vanilla-extract/css"
 import { theme } from "@design-system/theme/theme.css"
 import { Color } from "@design-system/theme/themes/colors/colorSetVars.css"
 
