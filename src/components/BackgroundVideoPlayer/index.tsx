@@ -16,7 +16,7 @@ export default function BackgroundVideoPlayer() {
     <div className={clsx(styles.videoWrapper)}>
       <video className={clsx(styles.video)}
              preload="metadata" autoPlay loop muted playsInline>
-        <source src="/video/fire.mp4" type="video/mp4" />
+        <source src="/video/beach.mp4" type="video/mp4" />
       </video>
       <div className={clsx(styles.videoBottomEffect)}/>
     </div>
