@@ -1,4 +1,4 @@
-import { MousePosition, Position, RectCorrection, ResizePosition } from "./types"
+import { MousePosition, Position, RectCorrection } from "./types"
 
 type OnDragContainerMouseDownProps = {
   mousePosition: MousePosition

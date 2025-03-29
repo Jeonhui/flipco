@@ -5,7 +5,7 @@ import clsx from "clsx"
 import React, { useState } from "react"
 import * as styles from "./styles.css"
 import { useIsClient } from "@design-system/hooks"
-import PopupContainer from "@/components/PopupContainer"
+import PopUpContainer from "@/components/PopupContainer"
 
 type YoutubePlayerProps = {
   videoId?: string
@@ -25,7 +25,7 @@ const YoutubePlayer = ({ videoId, containerClassName }: YoutubePlayerProps) => {
 
   if (!isClient) return null
 
-  return <PopupContainer
+  return <PopUpContainer
     containerClassName={containerClassName}
     isReady={isReady}>
     <YouTube
@@ -48,7 +48,7 @@ const YoutubePlayer = ({ videoId, containerClassName }: YoutubePlayerProps) => {
         e.target.stop(0)
       }}
     />
-  </PopupContainer>
+  </PopUpContainer>
 }
 
 export default YoutubePlayer

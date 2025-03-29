@@ -14,16 +14,9 @@ import {
   getResizePosition,
   resizePositionToCursor,
   onResizeContainerMouseMove
-} from "@/components/PopupContainer/utils/resizing"
-import { Position, RectCorrection, ResizePosition } from "@/components/PopupContainer/utils/types"
-import { onDragContainerMouseDown, onDragContainerMouseMove } from "@/components/PopupContainer/utils/dragging"
-
-const contentSizeCorrection: RectCorrection = {
-  top: 32,
-  left: 12.8,
-  right: 12.8,
-  bottom: 12.8
-}
+} from "./utils/resizing"
+import { Position, ResizePosition } from "./utils/types"
+import { onDragContainerMouseDown, onDragContainerMouseMove } from "./utils/dragging"
 
 type YoutubePlayerProps = {
   children?: ReactNode
@@ -32,9 +25,21 @@ type YoutubePlayerProps = {
   isReady?: boolean
 }
 
+const contentSizeCorrection = {
+  top: 32,
+  left: 12.8,
+  right: 12.8,
+  bottom: 12.8
+}
+
 type PopUpContainerControlMode = "Default" | "Drag" | "Resize"
 
-const YoutubePIP = ({ children, containerClassName, popupContainerClassName, isReady = true }: YoutubePlayerProps) => {
+const PopUpContainer = ({
+                          children,
+                          containerClassName,
+                          popupContainerClassName,
+                          isReady = true
+                        }: YoutubePlayerProps) => {
   const isClient = useIsClient()
   const containerRef = useRef<HTMLDivElement>(null)
   const dragOverlayRef = useRef<HTMLDivElement>(null)
@@ -56,6 +61,7 @@ const YoutubePIP = ({ children, containerClassName, popupContainerClassName, isR
 
 
   const [opacity, setOpacity] = useState<number>(100)
+
 
   const onDragOverlayMouseDown = (e: React.MouseEvent) => {
     const rect = dragOverlayRef.current?.getBoundingClientRect()
@@ -110,7 +116,7 @@ const YoutubePIP = ({ children, containerClassName, popupContainerClassName, isR
       setPosition({ x: initialLeftSpacing, y: top - initialBottomSpacing })
     }
     setIsSetup(true)
-  }, [isClient, isSetup, contentSize, contentSizeCorrection])
+  }, [isClient, isSetup, contentSize])
 
   useEffect(() => {
     if (!isClient) return
@@ -172,7 +178,7 @@ const YoutubePIP = ({ children, containerClassName, popupContainerClassName, isR
       window.removeEventListener("mousemove", onMouseMove)
       window.removeEventListener("mouseup", onMouseUp)
     }
-  }, [mode, dragOffset, isClient, contentSize, position, resizingPosition, initialRect, contentSizeCorrection])
+  }, [mode, dragOffset, isClient, contentSize, position, resizingPosition, initialRect])
 
   const onHideButtonClick = () => {
     setPosition((prev) => {
@@ -287,4 +293,4 @@ const YoutubePIP = ({ children, containerClassName, popupContainerClassName, isR
   )
 }
 
-export default YoutubePIP
+export default PopUpContainer
