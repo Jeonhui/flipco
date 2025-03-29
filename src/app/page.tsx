@@ -8,7 +8,7 @@ import {
 import BackgroundVideoPlayer from "../components/BackgroundVideoPlayer"
 import FlipDateClock from "../components/FlipDateClock"
 import * as styles from "./styles.css"
-import YoutubePIPPlayer from "../components/YoutubePIPPlayer"
+import YoutubePlayer from "@/components/YoutubePlayer"
 
 export default function Home() {
   return (
@@ -16,9 +16,9 @@ export default function Home() {
       background={
         <BackgroundVideoPlayer />
       }>
-      <Section alignment={"columnTopCenter"} animate={false}>
+      <Section alignment={"columnTopCenter"} animate={false} fixedHeight>
         <FlipDateClock className={styles.flipDateClock} />
-        <YoutubePIPPlayer containerClassName={styles.pipPlayerContainer}/>
+        <YoutubePlayer containerClassName={styles.pipPlayerContainer} />
       </Section>
     </Layout>
   )

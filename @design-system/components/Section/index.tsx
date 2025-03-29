@@ -11,6 +11,7 @@ type SectionProps = {
   className?: string
   animate?: boolean
   hasHeaderPadding?: boolean
+  fixedHeight?: boolean
   alignment?: keyof typeof styles.sectionAlignmentVariants
   gap?: keyof typeof styles.sectionGapVariants
   verticalPadding?: keyof typeof styles.sectionVerticalPaddingVariants
@@ -24,6 +25,7 @@ const Section = (
     className,
     animate = true,
     hasHeaderPadding = true,
+    fixedHeight = false,
     alignment = "columnTopLeft",
     gap = "medium",
     verticalPadding = "medium",
@@ -45,6 +47,9 @@ const Section = (
         styles.sectionAlignmentVariants[alignment],
         styles.sectionVerticalPaddingVariants[verticalPadding],
         styles.sectionHorizontalPaddingVariants[horizontalPadding],
+        {
+          [styles.sectionFixedScreenHeight]: fixedHeight
+        }
       )}
       {...props}
       data-animate={animate}

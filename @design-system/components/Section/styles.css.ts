@@ -20,6 +20,10 @@ export const section = style({
   },
 })
 
+export const sectionFixedScreenHeight = style({
+  height: "100svh",
+})
+
 globalStyle(`${section} > *`, {
   flexShrink: 0,
 })

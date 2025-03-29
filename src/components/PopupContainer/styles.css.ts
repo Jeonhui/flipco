@@ -1,10 +1,9 @@
 import { globalStyle, style } from "@vanilla-extract/css"
 import { theme } from "@design-system/theme/theme.css"
 
-export const container = style({
-  position: "relative"
-})
-export const youtubePlayerContainer = style({
+export const mainContainer = style({})
+
+export const popupContainer = style({
   position: "absolute",
   width: "fit-content",
   padding: "0.4rem",
@@ -13,15 +12,15 @@ export const youtubePlayerContainer = style({
   maxWidth: "100%"
 })
 
-export const youtubePlayerContainerMoveTransition = style({
+export const popupContainerHiddenMoveTransition = style({
   transition: "top 0.3s ease, left 0.3s ease, opacity 0.3s ease"
 })
 
-export const youtubePlayerContainerHidden = style({
+export const popupContainerHidden = style({
   opacity: 0
 })
 
-export const youtubePlayer = style({
+export const popupContentContainer = style({
   position: "relative",
   width: "fit-content",
   zIndex: theme.zIndices.overlay,
@@ -40,31 +39,31 @@ export const youtubePlayer = style({
   }
 })
 
-export const youtubeWrapper = style({
+export const contentWrapper = style({
   position: "relative",
   zIndex: `calc(${theme.zIndices.overlay} + 1)`,
   maxWidth: "100%"
 })
 
-globalStyle(`${youtubePlayerContainer}:hover > ${youtubePlayer}`, {
+globalStyle(`${popupContainer}:hover > ${popupContentContainer}`, {
   backdropFilter: "blur(10rem)",
   boxShadow: `0 0 0 0.05rem ${theme.colors.text.textDim4} inset`
 })
 
-globalStyle(`${youtubePlayerContainer} > ${youtubePlayer} > *:not(${youtubeWrapper})`, {
+globalStyle(`${popupContainer} > ${popupContentContainer} > *:not(${contentWrapper})`, {
   "@media": {
     "screen and (min-width: 480px)": {
       transition: "opacity 0.3s ease",
-      opacity: 0,
+      opacity: 0
     }
   }
 })
 
-globalStyle(`${youtubePlayerContainer}:hover > ${youtubePlayer} > *:not(${youtubeWrapper})`, {
+globalStyle(`${popupContainer}:hover > ${popupContentContainer} > *:not(${contentWrapper})`, {
   opacity: 1
 })
 
-export const resizingOverlay = style({
+export const popupContainerResizeOverlay = style({
   position: "absolute",
   top: 0,
   left: 0,
@@ -77,7 +76,7 @@ export const resizing = style({
   zIndex: `calc(${theme.zIndices.overlay} + 4)`
 })
 
-export const dragOverlay = style({
+export const popupContainerDrayOverlay = style({
   position: "absolute",
   top: 0,
   left: 0,
@@ -90,7 +89,7 @@ export const dragging = style({
   zIndex: `calc(${theme.zIndices.overlay} + 4)`
 })
 
-export const statusContainer = style({
+export const statusBarContainer = style({
   position: "absolute",
   top: 0,
   left: 0,
@@ -102,45 +101,15 @@ export const statusContainer = style({
   pointerEvents: "none"
 })
 
-globalStyle(`${statusContainer} > *`, {
+globalStyle(`${statusBarContainer} > *`, {
   pointerEvents: "auto",
   opacity: 0.7,
   zIndex: `calc(${theme.zIndices.overlay} + 20)`
 })
 
-export const resizeButton = style({
-  width: "16px",
-  height: "16px",
-  backgroundColor: "white",
-  cursor: "nesw-resize"
-})
-
 export const spacer = style({
   flex: 1,
   width: "100%"
-})
-
-export const youtubeIframeWrapper = style({
-  position: "absolute",
-  display: "flex",
-  width: "100%",
-  height: "100%",
-  borderRadius: theme.spaces.small,
-  overflow: "hidden",
-  zIndex: `calc(${theme.zIndices.overlay} + 1)`,
-  transition: "opacity 0.8s ease"
-})
-
-export const youtubeIframeWrapperInvisible = style({
-  opacity: 0
-})
-
-export const youtubeIframeWrapperVisible = style({
-  opacity: 1
-})
-
-globalStyle(`${youtubeIframeWrapper} > *`, {
-  zIndex: `calc(${theme.zIndices.overlay} + 1)`
 })
 
 export const opacitySlider = style({
@@ -207,7 +176,7 @@ export const showButton = style({
   transition: "opacity 0.3s ease",
   "@media": {
     "screen and (max-width: 480px)": {
-      left: "0.05rem",
+      left: "0.05rem"
     }
   }
 })
@@ -219,5 +188,5 @@ export const showButtonVisible = style({
 
 export const showButtonIcon = style({
   width: "2rem",
-  height: "3rem !important",
+  height: "3rem !important"
 })

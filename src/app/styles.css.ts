@@ -5,6 +5,10 @@ export const flipDateClock = style({
 })
 
 export const pipPlayerContainer = style({
+  position: "absolute",
+  top: 0,
+  left: 0,
   width: "100%",
-  flex: 1
+  flex: 1,
+  height: "100%"
 })
