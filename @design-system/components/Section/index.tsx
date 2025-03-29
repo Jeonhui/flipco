@@ -24,7 +24,7 @@ const Section = (
     children,
     className,
     animate = true,
-    hasHeaderPadding = true,
+    hasHeaderPadding = false,
     fixedHeight = false,
     alignment = "columnTopLeft",
     gap = "medium",

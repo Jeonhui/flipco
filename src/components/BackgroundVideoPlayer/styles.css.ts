@@ -13,13 +13,14 @@ export const video = style({
   width: "100%",
   height: "100%",
   objectFit: "cover",
+  transition: "opacity 0.5s ease-in-out",
 })
 
-export const videoInactive = style({
+export const videoInvisible = style({
   opacity: 0
 })
 
-export const videoActive = style({
+export const videoVisible = style({
   opacity: 1
 })
 

@@ -1,24 +1,36 @@
 "use client"
 
-import YouTube, { YouTubeEvent } from "react-youtube"
+import YouTube, { YouTubeEvent, YouTubePlayer } from "react-youtube"
 import clsx from "clsx"
-import React, { useState } from "react"
+import React, { Dispatch, useState } from "react"
 import * as styles from "./styles.css"
 import { useIsClient } from "@design-system/hooks"
 import PopUpContainer from "../PopUpContainer"
 
-type YoutubePlayerProps = {
-  videoId?: string
+type YoutubePipPlayerProps = {
+  videoId?: string | null
+  isHidden?: boolean
+  onHiddenChange?: (isHidden: boolean) => void
+  autoPlay?: boolean
   containerClassName?: string
+  setYoutubeElement?: Dispatch<YouTubePlayer | null>
 }
 
-const YoutubePlayer = ({ videoId, containerClassName }: YoutubePlayerProps) => {
+const YoutubePipPlayer = ({
+                            videoId,
+                            autoPlay = false,
+                            isHidden,
+                            onHiddenChange,
+                            containerClassName,
+                            setYoutubeElement
+                          }: YoutubePipPlayerProps) => {
   const isClient = useIsClient()
   const [isReady, setIsReady] = useState(false)
 
   const onYoutubeReady = (e: YouTubeEvent) => {
-    e.target.playVideo()
+    setYoutubeElement?.(e.target)
     setTimeout(() => {
+      if (autoPlay) e.target.playVideo()
       setIsReady(true)
     }, 500)
   }
@@ -27,13 +39,15 @@ const YoutubePlayer = ({ videoId, containerClassName }: YoutubePlayerProps) => {
 
   return <PopUpContainer
     containerClassName={containerClassName}
+    isHidden={isHidden}
+    onHiddenChange={onHiddenChange}
     isReady={isReady}>
     <YouTube
       className={clsx(styles.youtubeIframeWrapper, {
         [styles.youtubeIframeWrapperInvisible]: !isReady,
         [styles.youtubeIframeWrapperVisible]: isReady
       })}
-      videoId={videoId ?? "HfaIcB4Ogxk"}
+      videoId={videoId ?? "o-CoIJ2lmHc"}
       onReady={onYoutubeReady}
       opts={{
         width: "100%",
@@ -43,12 +57,10 @@ const YoutubePlayer = ({ videoId, containerClassName }: YoutubePlayerProps) => {
           rel: 0,
           modestbranding: 1
         }
-      }}
-      onEnd={(e) => {
-        e.target.stop(0)
+
       }}
     />
   </PopUpContainer>
 }
 
-export default YoutubePlayer
+export default YoutubePipPlayer

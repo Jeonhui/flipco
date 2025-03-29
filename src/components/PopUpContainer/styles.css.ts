@@ -1,5 +1,10 @@
 import { globalStyle, style } from "@vanilla-extract/css"
 import { theme } from "@design-system/theme/theme.css"
+import { Color } from "@design-system/theme/themes/colors/colorSetVars.css"
+
+const withAlpha = (color: Color, alpha: number): string => {
+  return `rgb(from ${color} r g b / ${alpha})`
+}
 
 export const mainContainer = style({})
 
@@ -34,7 +39,7 @@ export const popupContentContainer = style({
   "@media": {
     "screen and (max-width: 480px)": {
       backdropFilter: "blur(10rem)",
-      boxShadow: `0 0 0 0.05rem ${theme.colors.text.textDim4} inset`
+      boxShadow: `0 0 0 0.05rem ${withAlpha(theme.colors.text.textDim4, 0.24)} inset`
     }
   }
 })
@@ -47,7 +52,7 @@ export const contentWrapper = style({
 
 globalStyle(`${popupContainer}:hover > ${popupContentContainer}`, {
   backdropFilter: "blur(10rem)",
-  boxShadow: `0 0 0 0.05rem ${theme.colors.text.textDim4} inset`
+  boxShadow: `0 0 0 0.05rem ${withAlpha(theme.colors.text.textDim4, 0.24)} inset`
 })
 
 globalStyle(`${popupContainer} > ${popupContentContainer} > *:not(${contentWrapper})`, {
@@ -112,77 +117,18 @@ export const spacer = style({
   width: "100%"
 })
 
-export const opacitySlider = style({
-  WebkitAppearance: "none",
-  width: "5rem",
-  background: "transparent",
-  borderRadius: "0.4rem",
-  outline: "none",
-  transition: "background 0.2s",
-
-  selectors: {
-    "&:hover": {
-      background: theme.colorSet.gray700
-    },
-    "&::-webkit-slider-runnable-track": {
-      width: "100%",
-      height: "0.5rem",
-      background: `linear-gradient(to right, transparent 0%, ${theme.colorSet.gray800} 100%)`,
-      borderRadius: "0.25rem"
-    },
-    "&::-webkit-slider-thumb": {
-      WebkitAppearance: "none",
-      width: "1rem",
-      marginTop: "-0.25rem",
-      aspectRatio: "1",
-      background: theme.colorSet.gray800,
-      borderRadius: "50%",
-      cursor: "pointer",
-      transition: "background 0.2s"
-    },
-    "&::-webkit-slider-thumb:hover": {
-      background: theme.colorSet.gray700,
-      boxShadow: `0 0 0 0.025rem ${theme.colorSet.gray800} inset`
-    },
-    "&::-moz-range-track": {
-      width: "100%",
-      height: "0.5rem",
-      background: `linear-gradient(to right, transparent 0%, ${theme.colorSet.gray800} 100%)`,
-      borderRadius: "0.25rem",
-      padding: "0.02rem"
-    },
-    "&::-moz-range-thumb": {
-      WebkitAppearance: "none",
-      width: "1rem",
-      marginTop: "-0.25rem",
-      aspectRatio: "1",
-      background: theme.colorSet.gray800,
-      borderRadius: "50%",
-      cursor: "pointer",
-      transition: "background 0.2s"
-    },
-    "&::-moz-range-thumb:hover": {
-      background: theme.colorSet.gray700,
-      boxShadow: `0 0 0 0.025rem ${theme.colorSet.gray800} inset`
-    }
-  }
-})
-
 export const showButton = style({
   position: "absolute",
-  left: "1rem",
   opacity: 0,
   pointerEvents: "none",
+  backgroundColor: withAlpha(theme.colors.text.textDim4, 0.24),
   transition: "opacity 0.3s ease",
-  "@media": {
-    "screen and (max-width: 480px)": {
-      left: "0.05rem"
-    }
-  }
+  padding: "1rem 0.1rem",
+  borderRadius: theme.spaces.small,
 })
 
 export const showButtonVisible = style({
-  opacity: 1,
+  opacity: 0.8,
   pointerEvents: "auto"
 })
 

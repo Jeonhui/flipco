@@ -1,11 +1,20 @@
 import { globalStyle, style } from "@vanilla-extract/css"
 import { theme } from "@design-system/theme/theme.css"
+import { Color } from "@design-system/theme/themes/colors/colorSetVars.css"
+
+const withAlpha = (color: Color, alpha: number): string => {
+  return `rgb(from ${color} r g b / ${alpha})`
+}
 
 export const flipDateClockContainer = style({
   ...theme.alignments.columnTopLeft,
   gap: theme.spaces.xSmall,
   transition: "opacity 0.3s ease-in-out",
   userSelect: "none",
+  padding: theme.spaces.medium,
+  backdropFilter: "blur(0.16rem)",
+  borderRadius: theme.spaces.medium,
+  boxShadow: `0 0 0 0.05rem ${withAlpha(theme.colors.text.textDim4, 0.24)} inset`
 })
 
 export const flipDateClockContainerInvisible = style({
@@ -23,11 +32,11 @@ export const flipDate = style({
   "@media": {
     [`screen and (max-width: ${theme.breakpoints.small.width})`]: {
       ...theme.typographies.body1,
-      fontWeight: 'bold'
+      fontWeight: "bold"
     },
     [`screen and (max-width: 480px)`]: {
       ...theme.typographies.body3,
-      fontWeight: 'bold'
+      fontWeight: "bold"
     }
   }
 })
@@ -35,11 +44,11 @@ export const flipDate = style({
 export const flipClockContainer = style({
   ...theme.alignments.rowCenter,
   gap: theme.spaces.small,
-  width:"100%",
+  width: "100%",
   "@media": {
     [`screen and (max-width: 300px)`]: {
       ...theme.alignments.columnCenter,
-      gap: theme.spaces.xLarge,
+      gap: theme.spaces.xLarge
     }
   }
 })
@@ -57,13 +66,13 @@ export const flipClock = style({
 })
 
 export const flipClockSeparator = style({
-  opacity: 0.5,
+  opacity: 0.5
 })
 
 export const flipClockMedia = style({
   "@media": {
     [`screen and (max-width: 480px)`]: {
-      display: "none",
+      display: "none"
     }
   }
 })
@@ -71,7 +80,7 @@ export const flipClockMedia = style({
 export const flipClockMediaSmall = style({
   "@media": {
     [`screen and (max-width: 300px)`]: {
-      display: "none",
+      display: "none"
     }
   }
 })
@@ -87,17 +96,17 @@ globalStyle(`${flipClock} .tick-credits`, {
 })
 
 globalStyle(`${flipClock} .tick-flip`, {
-  opacity: 0.9,
+  opacity: 0.9
 })
 
 globalStyle(`${flipClock} .tick-flip-panel`, {
   color: theme.colors.text.text,
-  backgroundColor: theme.colors.background,
+  backgroundColor: theme.colors.background
 })
 
 globalStyle(`${flipClock} .tick-flip-panel-text-wrapper`, {
   display: "flex",
-  justifyContent: "center",
+  justifyContent: "center"
 })
 
 globalStyle(`${flipClock} .tick-flip-spacer`, {

@@ -41,6 +41,7 @@
   "dependencies": {
     "@pqina/flip": "^1.8.4",
     "@pqina/tick": "^1.8.3",
-    "react-youtube": "^10.1.0"
+    "react-youtube": "^10.1.0",
+    "youtube-player": "^5.6.0"
   }
 }

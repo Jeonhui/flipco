@@ -44,6 +44,9 @@ importers:
       react-youtube:
         specifier: ^10.1.0
         version: 10.1.0(react@19.0.0)
+      youtube-player:
+        specifier: ^5.6.0
+        version: 5.6.0
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3
@@ -2753,6 +2756,9 @@ packages:
 
   youtube-player@5.5.2:
     resolution: {integrity: sha512-ZGtsemSpXnDky2AUYWgxjaopgB+shFHgXVpiJFeNB5nWEugpW1KWYDaHKuLqh2b67r24GtP6HoSW5swvf0fFIQ==}
+
+  youtube-player@5.6.0:
+    resolution: {integrity: sha512-x95fBbxV7eZ1ZsFtMLMcSGX0Jb/GPPj69RsooyEDVa9bzvvNZ4d5VjnBVBYoY85008VefkLvtaV+b+l38R/LMQ==}
 
 snapshots:
 
@@ -5612,6 +5618,14 @@ snapshots:
   youtube-player@5.5.2:
     dependencies:
       debug: 2.6.9
+      load-script: 1.0.0
+      sister: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
+
+  youtube-player@5.6.0:
+    dependencies:
+      debug: 4.4.0
       load-script: 1.0.0
       sister: 3.0.2
     transitivePeerDependencies:

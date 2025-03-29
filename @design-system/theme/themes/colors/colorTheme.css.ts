@@ -537,10 +537,10 @@ const darkModeThemeColors: ColorTheme = {
     },
     grayText: {
       default: {
-        icon: colorSetVars.gray400,
+        icon: colorSetVars.gray100,
         background: "transparent",
         border: "transparent",
-        text: colorSetVars.gray400,
+        text: colorSetVars.gray100,
       },
       hover: {
         icon: colorSetVars.gray600,
@@ -555,8 +555,8 @@ const darkModeThemeColors: ColorTheme = {
         text: colorSetVars.gray700,
       },
       disabled: {
-        icon: colorSetVars.gray400,
-        background: colorSetVars.gray700,
+        icon: colorSetVars.gray700,
+        background: "transparent",
         border: "transparent",
         text: colorSetVars.gray500,
       },

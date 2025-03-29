@@ -1,24 +1,48 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useIsClient } from "@design-system/hooks"
 import { clsx } from "clsx"
 import * as styles from "./styles.css"
+import { Video } from "@/types"
 
-export default function BackgroundVideoPlayer() {
+type BackgroundVideoPlayerProps = {
+  video: Video
+}
+
+export default function BackgroundVideoPlayer({
+                                                video
+                                              }: BackgroundVideoPlayerProps) {
   const isClient = useIsClient()
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [currentVideo, setCurrentVideo] = useState<Video | null>(null)
 
-  if (!isClient) {
-    return null
+  const onLoadedDataHandler = () => {
+    setTimeout(() => {
+      setIsLoaded(true)
+    }, 500)
   }
+
+  useEffect(() => {
+    setIsLoaded(false)
+    setCurrentVideo(video)
+  }, [video])
+
+  if (!isClient) return null
 
   return (
     <div className={clsx(styles.videoWrapper)}>
-      <video className={clsx(styles.video)}
-             preload="metadata" autoPlay loop muted playsInline>
-        <source src="/video/beach.mp4" type="video/mp4" />
+      <video className={clsx(styles.video, {
+        [styles.videoInvisible]: !isLoaded,
+        [styles.videoVisible]: isLoaded
+      })}
+             preload="metadata" autoPlay loop muted playsInline
+             onLoadedData={onLoadedDataHandler}
+             key={currentVideo?.src}
+      >
+        <source src={currentVideo?.src} type={currentVideo?.type} />
       </video>
-      <div className={clsx(styles.videoBottomEffect)}/>
+      <div className={clsx(styles.videoBottomEffect)} />
     </div>
   )
 }

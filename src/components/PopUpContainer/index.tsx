@@ -3,7 +3,7 @@ import React, {
   useState,
   useEffect,
   MouseEventHandler,
-  ChangeEvent, ReactNode
+  ReactNode
 } from "react"
 import clsx from "clsx"
 import * as styles from "./styles.css"
@@ -17,6 +17,7 @@ import {
 } from "./utils/resizing"
 import { Position, ResizePosition } from "./utils/types"
 import { onDragContainerMouseDown, onDragContainerMouseMove } from "./utils/dragging"
+import Slider from "@/components/Slider"
 
 const contentSizeCorrection = {
   top: 32,
@@ -29,6 +30,8 @@ type PopUpContainerControlMode = "Default" | "Drag" | "Resize"
 
 type PopUpContainerProps = {
   children?: ReactNode
+  isHidden?: boolean
+  onHiddenChange?: (isHidden: boolean) => void
   containerClassName?: string
   popupContainerClassName?: string
   isReady?: boolean
@@ -36,6 +39,8 @@ type PopUpContainerProps = {
 
 const PopUpContainer = ({
                           children,
+                          isHidden,
+                          onHiddenChange,
                           containerClassName,
                           popupContainerClassName,
                           isReady = true
@@ -55,13 +60,12 @@ const PopUpContainer = ({
   const [lastPosition, setLastPosition] = useState({ x: 100, y: 100 })
   const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 })
 
-  const [isHidden, setIsHidden] = useState(false)
+  const [isHiddenSelf, setIsHiddenSelf] = useState(isHidden ?? false)
+  const [isInnerHidden, setIsInnerHidden] = useState(false)
 
   const [contentSize, setContentSize] = useState({ width: 320, height: 180 })
 
-
   const [opacity, setOpacity] = useState<number>(100)
-
 
   const onDragOverlayMouseDown = (e: React.MouseEvent) => {
     const rect = dragOverlayRef.current?.getBoundingClientRect()
@@ -96,7 +100,13 @@ const PopUpContainer = ({
     }))
   }
 
-  // Set Up
+  const setIsHiddenWithInnerButton = (value: boolean) => {
+    setIsHiddenSelf(({}) => {
+      setIsInnerHidden(true)
+      return value
+    })
+  }
+
   useEffect(() => {
     if (!isClient || isSetup) return
     const containerRect = containerRef.current?.getBoundingClientRect()
@@ -178,11 +188,15 @@ const PopUpContainer = ({
       window.removeEventListener("mousemove", onMouseMove)
       window.removeEventListener("mouseup", onMouseUp)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, dragOffset, isClient, contentSize, position, resizingPosition, initialRect])
 
-  const onHideButtonClick = () => {
+
+  const hide = (withHiddenChange: boolean) => {
     setPosition((prev) => {
-      setIsHidden(true)
+      if (withHiddenChange) {
+        setIsHiddenWithInnerButton(true)
+      }
       setLastPosition(prev)
       const boxSize = dragOverlayRef.current?.getBoundingClientRect() ?? {
         width: contentSize.width,
@@ -200,13 +214,34 @@ const PopUpContainer = ({
     })
   }
 
-  const onShowButtonClick = () => {
-    setPosition(lastPosition)
-    setIsHidden(false)
+  const onHideButtonClick = () => {
+    hide(true)
   }
 
-  const onOpacityChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setOpacity(Number(e.target.value))
+  const onShowButtonClick = () => {
+    setPosition(lastPosition)
+    setIsHiddenWithInnerButton(false)
+  }
+
+  useEffect(() => {
+    if (!isClient) return
+    if (isHidden === undefined || isHidden === isHiddenSelf) return
+    if (isInnerHidden) {
+      onHiddenChange?.(isHiddenSelf)
+      setIsInnerHidden(false)
+    } else {
+      setIsHiddenSelf(isHidden)
+      if (isHidden) {
+        hide(false)
+      } else {
+        setPosition(lastPosition)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isClient, isHidden, isHiddenSelf, isInnerHidden, lastPosition, onHiddenChange])
+
+  const onOpacityChange = (value: number) => {
+    setOpacity(value)
   }
 
   if (!isClient) return null
@@ -218,16 +253,14 @@ const PopUpContainer = ({
       <Button
         className={clsx(
           styles.showButton,
-          isHidden && styles.showButtonVisible
+          { [styles.showButtonVisible]: isHiddenSelf }
         )}
         style={{
           top: position.y + ((dragOverlayRef.current?.clientHeight ?? 0) / 2),
-          opacity: isHidden ? 0.6 : 0,
-          pointerEvents: isHidden ? "auto" : "none",
           transition: "opacity 0.3s ease"
         }}
-        color={"grayText"}
-        size={"xxSmall"}
+        color={"text"}
+        size={"none"}
         onClick={onShowButtonClick}
       >
         <ShowIcon preserveAspectRatio={"none"} className={clsx(styles.showButtonIcon)} />
@@ -236,7 +269,7 @@ const PopUpContainer = ({
         className={clsx(popupContainerClassName,
           styles.popupContainer,
           {
-            [styles.popupContainerHidden]: isHidden,
+            [styles.popupContainerHidden]: isHiddenSelf,
             [styles.popupContainerHiddenMoveTransition]: isReady && mode == "Default"
           })}
         style={{
@@ -269,14 +302,10 @@ const PopUpContainer = ({
               <HideIcon />
             </Button>
             <div className={clsx(styles.spacer)} />
-            <input
-              className={clsx(styles.opacitySlider)}
-              type="range"
-              min={40}
-              max={100}
-              value={opacity}
-              onChange={onOpacityChange}
-            />
+            <Slider min={40}
+                    max={100}
+                    value={opacity}
+                    onChange={onOpacityChange} />
           </Container>
           <div
             className={clsx(styles.contentWrapper)}

@@ -15,6 +15,7 @@ type ButtonProps = {
   rightIcon?: React.ReactNode
   onClick?: () => void
   onMouseDown?: () => void
+  disabled?: boolean
 }
 
 const Button = (
