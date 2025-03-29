@@ -5,7 +5,7 @@ import clsx from "clsx"
 import React, { useState } from "react"
 import * as styles from "./styles.css"
 import { useIsClient } from "@design-system/hooks"
-import PopUpContainer from "@/components/PopupContainer"
+import PopUpContainer from "../PopUpContainer"
 
 type YoutubePlayerProps = {
   videoId?: string

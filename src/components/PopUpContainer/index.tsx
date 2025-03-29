@@ -18,13 +18,6 @@ import {
 import { Position, ResizePosition } from "./utils/types"
 import { onDragContainerMouseDown, onDragContainerMouseMove } from "./utils/dragging"
 
-type YoutubePlayerProps = {
-  children?: ReactNode
-  containerClassName?: string
-  popupContainerClassName?: string
-  isReady?: boolean
-}
-
 const contentSizeCorrection = {
   top: 32,
   left: 12.8,
@@ -34,12 +27,19 @@ const contentSizeCorrection = {
 
 type PopUpContainerControlMode = "Default" | "Drag" | "Resize"
 
+type PopUpContainerProps = {
+  children?: ReactNode
+  containerClassName?: string
+  popupContainerClassName?: string
+  isReady?: boolean
+}
+
 const PopUpContainer = ({
                           children,
                           containerClassName,
                           popupContainerClassName,
                           isReady = true
-                        }: YoutubePlayerProps) => {
+                        }: PopUpContainerProps) => {
   const isClient = useIsClient()
   const containerRef = useRef<HTMLDivElement>(null)
   const dragOverlayRef = useRef<HTMLDivElement>(null)
