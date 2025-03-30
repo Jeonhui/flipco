@@ -117,6 +117,10 @@ export const spacer = style({
   width: "100%"
 })
 
+export const slider = style({
+  width: "3.6rem"
+})
+
 export const showButton = style({
   position: "absolute",
   opacity: 0,

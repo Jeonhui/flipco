@@ -1,9 +1,12 @@
 import { style } from "@vanilla-extract/css"
 import { theme } from "@design-system/theme/theme.css"
 
+const trackHeight = "0.26rem"
+const thumbSize = "0.6rem"
+
 export const slider = style({
   WebkitAppearance: "none",
-  width: "5rem",
+
   background: "transparent",
   borderRadius: "0.4rem",
   outline: "none",
@@ -11,48 +14,51 @@ export const slider = style({
 
   selectors: {
     "&:hover": {
-      background: theme.colorSet.gray700
+      background: theme.colorSet.gray300
     },
     "&::-webkit-slider-runnable-track": {
       width: "100%",
-      height: "0.5rem",
-      background: `linear-gradient(to right, transparent 0%, ${theme.colorSet.gray800} 100%)`,
-      borderRadius: "0.25rem"
+      height: trackHeight,
+      background: `linear-gradient(to right, transparent 0%, ${theme.colorSet.gray50} 100%)`,
+      borderRadius: `calc(${trackHeight} / 2)`
     },
     "&::-webkit-slider-thumb": {
       WebkitAppearance: "none",
-      width: "1rem",
-      marginTop: "-0.25rem",
+      width: thumbSize,
       aspectRatio: "1",
-      background: theme.colorSet.gray800,
+      marginTop: `calc(${trackHeight} / 2)`,
+      transform: "translateY(-50%)",
+      background: theme.colorSet.gray200,
       borderRadius: "50%",
       cursor: "pointer",
       transition: "background 0.2s"
     },
     "&::-webkit-slider-thumb:hover": {
-      background: theme.colorSet.gray700,
-      boxShadow: `0 0 0 0.025rem ${theme.colorSet.gray800} inset`
+      background: theme.colorSet.gray300,
+      boxShadow: `0 0 0 0.025rem ${theme.colorSet.gray500} inset`
     },
+
+    // Firefox
     "&::-moz-range-track": {
       width: "100%",
-      height: "0.5rem",
-      background: `linear-gradient(to right, transparent 0%, ${theme.colorSet.gray800} 100%)`,
-      borderRadius: "0.25rem",
+      height: trackHeight,
+      background: `linear-gradient(to right, transparent 0%, ${theme.colorSet.gray50} 100%)`,
+      borderRadius: `calc(${trackHeight} / 2)`,
       padding: "0.02rem"
     },
     "&::-moz-range-thumb": {
       WebkitAppearance: "none",
-      width: "1rem",
-      marginTop: "-0.25rem",
+      width: thumbSize,
       aspectRatio: "1",
-      background: theme.colorSet.gray800,
+      marginTop: "-0.25rem",
+      background: theme.colorSet.gray200,
       borderRadius: "50%",
       cursor: "pointer",
       transition: "background 0.2s"
     },
     "&::-moz-range-thumb:hover": {
-      background: theme.colorSet.gray700,
-      boxShadow: `0 0 0 0.025rem ${theme.colorSet.gray800} inset`
+      background: theme.colorSet.gray300,
+      boxShadow: `0 0 0 0.025rem ${theme.colorSet.gray500} inset`
     }
   }
 })

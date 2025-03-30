@@ -5,6 +5,7 @@ import * as styles from "./styles.css"
 import React from "react"
 
 type SliderProps = {
+  className?: string
   min?: number
   max?: number
   value: number
@@ -13,6 +14,7 @@ type SliderProps = {
 
 
 const Slider = ({
+                  className,
                   min,
                   max,
                   value,
@@ -24,7 +26,8 @@ const Slider = ({
   }
 
   return <input
-    className={clsx(styles.slider)}
+    className={clsx(className,
+      styles.slider)}
     type="range"
     min={min}
     max={max}

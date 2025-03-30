@@ -302,7 +302,9 @@ const PopUpContainer = ({
               <HideIcon />
             </Button>
             <div className={clsx(styles.spacer)} />
-            <Slider min={40}
+            <Slider
+              className={clsx(styles.slider)}
+              min={40}
                     max={100}
                     value={opacity}
                     onChange={onOpacityChange} />

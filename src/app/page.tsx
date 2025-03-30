@@ -12,7 +12,7 @@ import * as styles from "./styles.css"
 import YoutubePipPlayer from "../components/YoutubePipPlayer"
 import { Video } from "@/types"
 import { YouTubePlayer } from "react-youtube"
-import YoutubePipController from "@/components/YoutubePipController"
+import FlipcoController from "../components/FlipcoController"
 
 const templateVideos: { [key in string]: Video } = {
   "beach": {
@@ -58,7 +58,7 @@ export default function Home() {
           setYoutubeElement={setYoutubeElement}
         />
         <Container className={styles.controlContainer} alignment={"rowCenter"} layout={"fullWidth"}>
-          <YoutubePipController
+          <FlipcoController
             isHidden={youtubeVideoHide}
             onHiddenChange={onYoutubeHiddenChange}
             youtubeElement={youtubeElement}

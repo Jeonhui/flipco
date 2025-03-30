@@ -2,7 +2,7 @@ import {
   globalStyle,
   keyframes,
   style,
-  styleVariants,
+  styleVariants
 } from "@vanilla-extract/css"
 import { theme } from "../../theme/theme.css"
 import { headerHeight, layoutContentBreakpoint } from "../Layout/styles.css"
@@ -12,51 +12,55 @@ export const section = style({
   scrollSnapAlign: "start",
   width: "100%",
   minHeight: "100svh",
-  padding: `0 ${theme.spaces.xLarge}`,
+  paddingLeft: theme.spaces.xLarge,
+  paddingRight: theme.spaces.xLarge,
   "@media": {
     [layoutContentBreakpoint.media]: {
-      padding: `0 ${theme.spaces.medium}`,
-    },
-  },
+      paddingLeft: theme.spaces.medium,
+      paddingRight: theme.spaces.medium
+    }
+  }
 })
 
 export const sectionFixedScreenHeight = style({
-  height: "100svh",
+  height: "100svh"
 })
 
 globalStyle(`${section} > *`, {
-  flexShrink: 0,
+  flexShrink: 0
 })
 
 export const sectionAlignmentVariants = styleVariants(
   theme.alignments,
-  (alignment) => alignment,
+  (alignment) => alignment
 )
 
 export const sectionGapVariants = styleVariants(theme.spaces, (space) =>
   space === "0"
     ? {}
     : {
-        gap: space,
-      },
+      gap: space
+    }
 )
 
 export const sectionVerticalPaddingVariants = styleVariants(
   theme.spaces,
   (space) =>
-    space === "0"
+    space === "none"
       ? {
-          "&[data-has-header-padding=true]": {
-            paddingTop: headerHeight,
-          },
+        paddingTop: `${space}`,
+        paddingBottom: space,
+        "&[data-has-header-padding=true]": {
+          paddingTop: headerHeight
         }
+      }
       : {
-          "&[data-has-header-padding=true]": {
-            paddingTop: `calc(${space} + ${headerHeight})`,
-          },
-          paddingTop: `${space}`,
-          paddingBottom: space,
+        "&[data-has-header-padding=true]": {
+          paddingTop: `calc(${space} + ${headerHeight})`
         },
+        paddingTop: `${space}`,
+        paddingBottom: space
+      }
 )
 
 export const sectionHorizontalPaddingVariants = styleVariants(
@@ -65,32 +69,32 @@ export const sectionHorizontalPaddingVariants = styleVariants(
     space === "0"
       ? {}
       : {
-          paddingLeft: space,
-          paddingRight: space,
-        },
+        paddingLeft: space,
+        paddingRight: space
+      }
 )
 
 const enter = keyframes({
   "0%": { opacity: "0", transform: "translateY(4rem)" },
-  "100%": { opacity: "1", transform: "none" },
+  "100%": { opacity: "1", transform: "none" }
 })
 
 globalStyle("[data-animate=true] > .container", {
   vars: {
     "--step": "0",
     "--delayPerStep": "120ms",
-    "--start": "0ms",
+    "--start": "0ms"
   },
   "@media": {
     "(prefers-reduced-motion: no-preference)": {
       animation: `${enter} 0.5s both`,
-      animationDelay: "calc(var(--step) * var(--delayPerStep) + var(--start))",
-    },
-  },
+      animationDelay: "calc(var(--step) * var(--delayPerStep) + var(--start))"
+    }
+  }
 })
 
 for (let i = 1; i <= 20; i++) {
   globalStyle(`[data-animate=true] > .container:nth-child(${i})`, {
-    vars: { "--step": `${i - 1}` },
+    vars: { "--step": `${i - 1}` }
   })
 }

@@ -5,6 +5,7 @@ import * as styles from "./styles.css"
 type LayoutProps = {
   children: React.ReactNode
   background?: React.ReactNode
+  useSideBar?: boolean
   leftSidebar?: React.ReactNode
   rightSidebar?: React.ReactNode
   layoutContentHasMaxWidth?: boolean
@@ -19,6 +20,7 @@ const Layout = (
   {
     children,
     background,
+    useSideBar = false,
     leftSidebar,
     rightSidebar,
     layoutContentHasMaxWidth = false,
@@ -29,7 +31,7 @@ const Layout = (
     alignment = "columnTopCenter",
     ...props
   }: LayoutProps,
-  ref: Ref<HTMLDivElement>,
+  ref: Ref<HTMLDivElement>
 ) => {
   return (
     <div
@@ -42,7 +44,7 @@ const Layout = (
         {background}
       </div>
       <div className={clsx(styles.forScrollbar)} />
-      <div className={clsx("leftSideBar", styles.sidebar)}>{leftSidebar}</div>
+      {useSideBar && <div className={clsx("leftSideBar", styles.sidebar)}>{leftSidebar}</div>}
       <div
         className={clsx(
           "layoutContent",
@@ -51,13 +53,13 @@ const Layout = (
           styles.layoutContentAlignmentVariants[alignment],
           styles.layoutContentGapVariants[gap],
           {
-            [styles.layoutContentMaxWidth]: layoutContentHasMaxWidth,
+            [styles.layoutContentMaxWidth]: layoutContentHasMaxWidth
           }
         )}
       >
         {children}
       </div>
-      <div className={clsx("rightSideBar", styles.sidebar)}>{rightSidebar}</div>
+      {useSideBar && <div className={clsx("rightSideBar", styles.sidebar)}>{rightSidebar}</div>}
     </div>
   )
 }
