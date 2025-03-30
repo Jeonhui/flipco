@@ -18,17 +18,19 @@ const templateVideos: { [key in string]: Video } = {
   "beach": {
     src: "/video/beach.mp4",
     name: "beach",
+    thumbnail: "/video/thumbnail/beach.png",
     type: "video/mp4"
   },
   "fire": {
     src: "/video/fire.mp4",
     name: "fire",
+    thumbnail: "/video/thumbnail/fire.png",
     type: "video/mp4"
   }
 }
 
 export default function Home() {
-  const [backgroundVideo, setBackgroundVideo] = useState<Video>(templateVideos["beach"])
+  const [backgroundVideo, setBackgroundVideo] = useState<Video | null>(templateVideos["beach"])
   const [youtubeVideoId, setYoutubeVideoId] = useState<string | null>(null)
   const [youtubeVideoHide, setYoutubeVideoHide] = useState<boolean>(false)
   const [youtubeElement, setYoutubeElement] = useState<YouTubePlayer | null>(null)
@@ -62,7 +64,13 @@ export default function Home() {
             isHidden={youtubeVideoHide}
             onHiddenChange={onYoutubeHiddenChange}
             youtubeElement={youtubeElement}
-            setYoutubeVideoId={setYoutubeVideoId} />
+            setYoutubeVideoId={setYoutubeVideoId}
+            currentVideo={backgroundVideo}
+            videos={Object.keys(templateVideos).map(key => templateVideos[key])}
+            onVideoSelect={(video) => {
+              setBackgroundVideo(video ?? null)
+            }}
+          />
         </Container>
       </Section>
     </Layout>

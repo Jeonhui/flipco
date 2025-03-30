@@ -11,7 +11,8 @@ import Slider from "@/components/Slider"
 import Volume from "./components/VolumeButton"
 import { YoutubeAction, YoutubePlayerState } from "./types"
 import YoutubeControl from "./components/YoutubeControl"
-import SelectionContainer from "@/components/FlipcoController/components/SelectionContainer"
+import { Video } from "@/types"
+import VideoSelection from "@/components/FlipcoController/components/VideoSelection"
 
 const youtubePlayerStateMap: { [key in string]: YoutubePlayerState } = {
   "-1": "unstarted",
@@ -28,6 +29,9 @@ type FlipcoControllerProps = {
   setYoutubeVideoId: (videoId: string) => void
   isHidden?: boolean
   onHiddenChange?: (isHidden: boolean) => void
+  currentVideo?: Video | null
+  videos?: Video[]
+  onVideoSelect?: (video?: Video | null) => void
 }
 
 const FlipcoController = ({
@@ -35,7 +39,10 @@ const FlipcoController = ({
                             youtubeElement,
                             setYoutubeVideoId,
                             isHidden,
-                            onHiddenChange
+                            onHiddenChange,
+                            currentVideo,
+                            videos,
+                            onVideoSelect
                           }: FlipcoControllerProps) => {
   const isClient = useIsClient()
   const [youtubeState, setYoutubeState] = useState<YoutubePlayerState>("unstarted")
@@ -189,7 +196,6 @@ const FlipcoController = ({
           onPrev={onPrevHandler}
         />
       </Container>
-
       <Container className={clsx(styles.itemContainer)}
                  alignment={"rowCenterLeft"}
                  layout={"fullWidth"}
@@ -239,12 +245,14 @@ const FlipcoController = ({
           </Button>
         </Container>
       </Container>
-      <SelectionContainer title={"playlist"} isVisible={showPlaylist}>
 
-      </SelectionContainer>
-      <SelectionContainer title={"background video"} isVisible={showBackgroundVideos}>
 
-      </SelectionContainer>
+
+      <VideoSelection
+        videos={videos}
+        isVisible={showBackgroundVideos}
+        currentVideo={currentVideo}
+        onVideoSelect={onVideoSelect} />
       <div className={clsx(styles.divider)} />
       <Container className={clsx(styles.itemContainer)} alignment={"rowCenterLeft"} layout={"fullWidth"}>
         <Button color={"grayText"}

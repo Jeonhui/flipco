@@ -7,7 +7,7 @@ import * as styles from "./styles.css"
 import { Video } from "@/types"
 
 type BackgroundVideoPlayerProps = {
-  video: Video
+  video?: Video | null
 }
 
 export default function BackgroundVideoPlayer({
@@ -25,7 +25,9 @@ export default function BackgroundVideoPlayer({
 
   useEffect(() => {
     setIsLoaded(false)
-    setCurrentVideo(video)
+    setTimeout(() => {
+      setCurrentVideo(video ?? null)
+    }, 500)
   }, [video])
 
   if (!isClient) return null

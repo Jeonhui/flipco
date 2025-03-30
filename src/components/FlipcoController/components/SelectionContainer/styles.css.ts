@@ -7,19 +7,19 @@ const withAlpha = (color: Color, alpha: number): string => {
 }
 
 export const selectionContainer = style({
-  transition: "height 0.4s ease-in-out,  max-height 0.4s ease-in-out",
+  transition: "height 0.4s ease-in-out, max-height 1s ease-in-out",
   overflowY: "hidden",
   width: "100%"
 })
 
 export const selectionContainerInvisible = style({
-  height: "0",
-  transitionDelay: "0.4s"
+  maxHeight: "0"
+  // transitionDelay: "0.3s"
 })
 
 export const selectionContainerVisible = style({
-  height: "calc((100svh - 20rem) / 2)",
-  transitionDelay: "0s"
+  maxHeight: "100svh"
+  // transitionDelay: "0s"
 })
 
 globalStyle(`${selectionContainer} > *`, {
@@ -27,18 +27,24 @@ globalStyle(`${selectionContainer} > *`, {
 })
 
 globalStyle(`${selectionContainerInvisible} > *`, {
-  transitionDelay: "0.4s",
-  opacity: 0
+  // transitionDelay: "0",
+  opacity: "0 !important"
 })
 
 globalStyle(`${selectionContainerVisible} > *`, {
-  transitionDelay: "0",
+  // transitionDelay: "0.4s",
   opacity: 1
 })
 
-export const selectionContainerTitle = style({
+export const selectionItemContainer = style({
+  position: "relative",
   width: "100%",
-  padding: `0 ${theme.spaces.xSmall}`,
+  height: "100%"
+})
+
+export const selectionItemContainerTitle = style({
+  width: "100%",
+  padding: `0 ${theme.spaces.xSmall}`
 })
 
 export const divider = style({
@@ -50,9 +56,10 @@ export const divider = style({
 })
 
 export const itemContainer = style({
-  height: "100%",
+  position: "relative",
   flex: 1,
   width: "100%",
+  maxHeight: "calc((100svh - 22rem) / 2)",
   overflow: "scroll",
   scrollBehavior: "smooth",
   scrollSnapType: "x mandatory",
@@ -61,4 +68,12 @@ export const itemContainer = style({
       display: "none"
     }
   }
+})
+
+export const itemSpacer = style({
+  width: "10rem"
+})
+
+export const itemScrollContainer = style({
+  height: "100%",
 })

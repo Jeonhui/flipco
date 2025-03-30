@@ -555,7 +555,7 @@ const darkModeThemeColors: ColorTheme = {
         text: colorSetVars.gray700,
       },
       disabled: {
-        icon: withAlpha(colorSetVars.gray500, 0.4),
+        icon: withAlpha(colorSetVars.gray300, 0.6),
         background: "transparent",
         border: "transparent",
         text: colorSetVars.gray500,
