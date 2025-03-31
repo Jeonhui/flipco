@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import {
   Container,
   Layout,
@@ -13,6 +13,8 @@ import YoutubePipPlayer from "../components/YoutubePipPlayer"
 import { Video } from "@/types"
 import { YouTubePlayer } from "react-youtube"
 import FlipcoController from "../components/FlipcoController"
+import { getCookie, setCookie } from "@/hooks/cookie"
+import { useIsClient } from "@design-system/hooks"
 
 const templateVideos: { [key in string]: Video } = {
   "beach": {
@@ -29,24 +31,57 @@ const templateVideos: { [key in string]: Video } = {
   }
 }
 
+const defaultYoutubeVideoIdList: string[] = [
+  "phRZKH1tQsQ",
+  "SJ_AqcH1OUQ"
+]
+
 export default function Home() {
+  const isClient = useIsClient()
   const [backgroundVideo, setBackgroundVideo] = useState<Video | null>(templateVideos["beach"])
   const [youtubeVideoId, setYoutubeVideoId] = useState<string | null>(null)
   const [youtubeVideoHide, setYoutubeVideoHide] = useState<boolean>(false)
   const [youtubeElement, setYoutubeElement] = useState<YouTubePlayer | null>(null)
 
-
-  useEffect(() => {
-    setBackgroundVideo(templateVideos["beach"])
-  }, [])
+  const [youtubeVideoIdList, setYoutubeVideoIdList] = useState<string[]>([])
 
   const onYoutubeHiddenChange = (isHidden: boolean) => {
     if (youtubeVideoHide === isHidden) return
     setYoutubeVideoHide(isHidden)
   }
 
+  const getYoutubeVideoIdListFromCookie = () => {
+    if (!isClient) return
+    const cookieVideoList = getCookie<string[]>("youtubeVideoIdList") ?? []
+    if (cookieVideoList.length === 0) {
+      setYoutubeVideoIdList(defaultYoutubeVideoIdList)
+      setYoutubeVideoId(defaultYoutubeVideoIdList[0])
+      setCookie<string[]>("youtubeVideoIdList", defaultYoutubeVideoIdList, 14)
+    } else {
+      setYoutubeVideoIdList(cookieVideoList)
+      setYoutubeVideoId(cookieVideoList[0])
+    }
+  }
+
+  const setYoutubeVideoIdListWithCookie = (videoIdList: string[]) => {
+    setYoutubeVideoIdList(videoIdList)
+    setCookie<string[]>("youtubeVideoIdList", videoIdList, 14)
+  }
+
+  const onSetYoutubeVideoId = (videoId: string) => {
+    setYoutubeVideoId(videoId)
+    setTimeout(() => {
+      youtubeElement.loadVideoById(videoId)
+    }, 400)
+  }
+
+  const onLoad = () => {
+    getYoutubeVideoIdListFromCookie()
+  }
+
   return (
     <Layout
+      onLoad={onLoad}
       background={
         <BackgroundVideoPlayer video={backgroundVideo} />
       }>
@@ -64,7 +99,10 @@ export default function Home() {
             isHidden={youtubeVideoHide}
             onHiddenChange={onYoutubeHiddenChange}
             youtubeElement={youtubeElement}
-            setYoutubeVideoId={setYoutubeVideoId}
+            currentYoutubeVideoId={youtubeVideoId}
+            setYoutubeVideoId={onSetYoutubeVideoId}
+            youtubeVideoIdList={youtubeVideoIdList}
+            setYoutubeVideoIdList={setYoutubeVideoIdListWithCookie}
             currentVideo={backgroundVideo}
             videos={Object.keys(templateVideos).map(key => templateVideos[key])}
             onVideoSelect={(video) => {

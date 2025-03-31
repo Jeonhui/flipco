@@ -17,6 +17,7 @@ type InputRef = {
 }
 
 type InputProps = {
+  className?: string
   leftChildren?: React.ReactNode
   rightChildren?: React.ReactNode
   type?: HTMLInputTypeAttribute
@@ -30,6 +31,7 @@ type InputProps = {
 
 const Input = (
   {
+    className,
     leftChildren,
     rightChildren,
     type = "text",
@@ -59,6 +61,7 @@ const Input = (
     <div
       ref={containerRef}
       className={clsx(
+        className,
         styles.input,
         styles.inputColorVariants[color],
         styles.inputSizeVariants[size],

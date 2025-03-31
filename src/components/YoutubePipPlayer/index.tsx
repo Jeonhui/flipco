@@ -2,7 +2,7 @@
 
 import YouTube, { YouTubeEvent, YouTubePlayer } from "react-youtube"
 import clsx from "clsx"
-import React, { Dispatch, useState } from "react"
+import React, { Dispatch, useEffect, useState } from "react"
 import * as styles from "./styles.css"
 import { useIsClient } from "@design-system/hooks"
 import PopUpContainer from "../PopUpContainer"
@@ -26,6 +26,8 @@ const YoutubePipPlayer = ({
                           }: YoutubePipPlayerProps) => {
   const isClient = useIsClient()
   const [isReady, setIsReady] = useState(false)
+  const [isChange, setIsChange] = useState(false)
+
 
   const onYoutubeReady = (e: YouTubeEvent) => {
     setYoutubeElement?.(e.target)
@@ -34,6 +36,14 @@ const YoutubePipPlayer = ({
       setIsReady(true)
     }, 500)
   }
+
+  useEffect(() => {
+    if (!videoId) return
+    setIsChange(true)
+    setTimeout(() => {
+      setIsChange(false)
+    }, 600)
+  }, [videoId])
 
   if (!isClient) return null
 
@@ -44,20 +54,20 @@ const YoutubePipPlayer = ({
     isReady={isReady}>
     <YouTube
       className={clsx(styles.youtubeIframeWrapper, {
-        [styles.youtubeIframeWrapperInvisible]: !isReady,
-        [styles.youtubeIframeWrapperVisible]: isReady
+        [styles.youtubeIframeWrapperInvisible]: !isReady || isChange,
+        [styles.youtubeIframeWrapperVisible]: isReady && !isChange
       })}
-      videoId={videoId ?? "o-CoIJ2lmHc"}
+      videoId={videoId ?? ""}
       onReady={onYoutubeReady}
       opts={{
         width: "100%",
         height: "100%",
         playerVars: {
+          controls: 0,
           autoplay: 1,
           rel: 0,
           modestbranding: 1
         }
-
       }}
     />
   </PopUpContainer>

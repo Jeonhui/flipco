@@ -15,9 +15,10 @@ type YoutubeControlProps = {
   onPause?: () => void
   onNext?: () => void
   onPrev?: () => void
+  isMoveable?: boolean
 }
 
-const YoutubeControl = ({ className, youtubeState, onPlay, onPause, onNext, onPrev }: YoutubeControlProps) => {
+const YoutubeControl = ({ className, youtubeState, onPlay, onPause, onNext, onPrev, isMoveable }: YoutubeControlProps) => {
   const isClient = useIsClient()
 
   if (!isClient) return null
@@ -27,8 +28,8 @@ const YoutubeControl = ({ className, youtubeState, onPlay, onPause, onNext, onPr
       className={clsx(styles.controlButton)}
       color={"grayText"}
       size={"none"}
-      disabled
       onClick={onPrev}
+      disabled={!isMoveable}
     >
       <PrevIcon />
     </Button>
@@ -57,6 +58,7 @@ const YoutubeControl = ({ className, youtubeState, onPlay, onPause, onNext, onPr
       size={"none"}
       className={clsx(styles.controlButton)}
       onClick={onNext}
+      disabled={!isMoveable}
     >
       <NextIcon />
     </Button>

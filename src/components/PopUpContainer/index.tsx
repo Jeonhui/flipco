@@ -188,7 +188,6 @@ const PopUpContainer = ({
       window.removeEventListener("mousemove", onMouseMove)
       window.removeEventListener("mouseup", onMouseUp)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, dragOffset, isClient, contentSize, position, resizingPosition, initialRect])
 
 
@@ -305,9 +304,9 @@ const PopUpContainer = ({
             <Slider
               className={clsx(styles.slider)}
               min={40}
-                    max={100}
-                    value={opacity}
-                    onChange={onOpacityChange} />
+              max={100}
+              value={opacity}
+              onChange={onOpacityChange} />
           </Container>
           <div
             className={clsx(styles.contentWrapper)}

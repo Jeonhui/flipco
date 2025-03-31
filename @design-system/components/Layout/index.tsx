@@ -14,6 +14,7 @@ type LayoutProps = {
   scrollSnapMandatory?: boolean
   alignment?: keyof typeof styles.layoutContentAlignmentVariants
   gap?: keyof typeof styles.layoutContentGapVariants
+  onLoad?: () => void
 }
 
 const Layout = (
@@ -29,12 +30,14 @@ const Layout = (
     scrollSnapMandatory = false,
     gap = "medium",
     alignment = "columnTopCenter",
+    onLoad,
     ...props
   }: LayoutProps,
   ref: Ref<HTMLDivElement>
 ) => {
   return (
     <div
+      onLoad={onLoad}
       ref={ref}
       className={clsx("layout", layoutClassName, styles.layout)}
       {...props}

@@ -7,9 +7,9 @@ const withAlpha = (color: Color, alpha: number): string => {
 }
 
 export const selectionContainer = style({
-  transition: "height 0.4s ease-in-out, max-height 1s ease-in-out",
+  transition: "height 0.4s ease-in-out, max-height 1s ease-in-out, opacity 0.4s ease-in-out 0.4s",
   overflowY: "hidden",
-  width: "100%"
+  width: "100%",
 })
 
 export const selectionContainerInvisible = style({
@@ -75,5 +75,5 @@ export const itemSpacer = style({
 })
 
 export const itemScrollContainer = style({
-  height: "100%",
+  height: "100%"
 })

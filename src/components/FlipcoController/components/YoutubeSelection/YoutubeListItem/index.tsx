@@ -5,17 +5,19 @@ import React, { useState } from "react"
 import { clsx } from "clsx"
 import * as styles from "./styles.css"
 import { Button, Container } from "@design-system/components"
-import { Video } from "@/types"
 import Image from "next/image"
-import { PauseIcon, PlayIcon } from "@/assets/icons"
+import { CloseIcon, PauseIcon, PlayIcon } from "@/assets/icons"
 
-type VideoListItemProps = {
-  video: Video
+type YoutubeListItemProps = {
+  youtubeVideoId: string
   isPlaying?: boolean
-  onClick?: (video?: Video) => void
+  canDelete?: boolean
+  onPlay?: (youtubeVideoId: string) => void
+  onPause?: (youtubeVideoId: string) => void
+  onDelete?: (youtubeVideoId: string) => void
 }
 
-const VideoListItem = ({ video, isPlaying, onClick }: VideoListItemProps) => {
+const YoutubeListItem = ({ youtubeVideoId, isPlaying, onPlay, onPause, onDelete, canDelete }: YoutubeListItemProps) => {
   const isClient = useIsClient()
   const [isThumbnailLoaded, setIsThumbnailLoaded] = useState(false)
 
@@ -24,27 +26,13 @@ const VideoListItem = ({ video, isPlaying, onClick }: VideoListItemProps) => {
   return <Container
     alignment={"columnTopLeft"}
     className={clsx(styles.videoItemContainer)}>
-    {video.thumbnail ?
-      <Image width={100}
-             height={100}
-             className={clsx(styles.videoItemThumbnail,
-               {
-                 [styles.videoItemThumbnailVisible]: isThumbnailLoaded,
-                 [styles.videoItemThumbnailInvisible]: !isThumbnailLoaded
-               })}
-             onLoadingComplete={() => setIsThumbnailLoaded(true)} src={video.thumbnail}
-             alt={video.name} />
-      : <Image width={100}
-               height={100}
-               className={clsx(styles.videoItemThumbnail,
-                 {
-                   [styles.videoItemThumbnailVisible]: isThumbnailLoaded,
-                   [styles.videoItemThumbnailInvisible]: !isThumbnailLoaded
-                 })}
-               onLoadingComplete={() => setIsThumbnailLoaded(true)}
-               src={"/video/default.png"}
-               alt={video.name} />
-    }
+    <Image width={100} height={100} className={clsx(styles.videoItemThumbnail, {
+      [styles.videoItemThumbnailVisible]: isThumbnailLoaded,
+      [styles.videoItemThumbnailInvisible]: !isThumbnailLoaded
+    })}
+           onLoadingComplete={() => setIsThumbnailLoaded(true)}
+           src={`https://img.youtube.com/vi/${youtubeVideoId}/0.jpg`}
+           alt={youtubeVideoId} />
 
     <div className={clsx(styles.videoThumbnailOverlay)} />
 
@@ -53,9 +41,9 @@ const VideoListItem = ({ video, isPlaying, onClick }: VideoListItemProps) => {
             className={clsx(styles.videoItemPlayButton, styles.nestingIconButton)}
             onClick={() => {
               if (isPlaying) {
-                onClick?.(undefined)
+                onPause?.(youtubeVideoId)
               } else {
-                onClick?.(video)
+                onPlay?.(youtubeVideoId)
               }
             }}
     >
@@ -69,6 +57,15 @@ const VideoListItem = ({ video, isPlaying, onClick }: VideoListItemProps) => {
       })} />
     </Button>
 
+    <Button color={"grayText"}
+            size={"none"}
+            className={clsx(styles.videoItemDeleteButton, styles.nestingIconButton)}
+            disabled={!canDelete}
+            onClick={() => onDelete?.(youtubeVideoId)}
+    >
+      <CloseIcon />
+    </Button>
+
     <Container
       className={clsx(styles.videoItemBottomEffect)}
       alignment={"rowBottomLeft"}
@@ -76,4 +73,4 @@ const VideoListItem = ({ video, isPlaying, onClick }: VideoListItemProps) => {
   </Container>
 }
 
-export default VideoListItem
+export default YoutubeListItem

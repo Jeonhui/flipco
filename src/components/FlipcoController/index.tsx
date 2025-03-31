@@ -13,6 +13,7 @@ import { YoutubeAction, YoutubePlayerState } from "./types"
 import YoutubeControl from "./components/YoutubeControl"
 import { Video } from "@/types"
 import VideoSelection from "@/components/FlipcoController/components/VideoSelection"
+import YoutubeSelection from "@/components/FlipcoController/components/YoutubeSelection"
 
 const youtubePlayerStateMap: { [key in string]: YoutubePlayerState } = {
   "-1": "unstarted",
@@ -26,7 +27,10 @@ const youtubePlayerStateMap: { [key in string]: YoutubePlayerState } = {
 type FlipcoControllerProps = {
   containerClassName?: string
   youtubeElement?: YouTubePlayer
-  setYoutubeVideoId: (videoId: string) => void
+  currentYoutubeVideoId?: string | null
+  youtubeVideoIdList?: string[]
+  setYoutubeVideoId?: (videoId: string) => void
+  setYoutubeVideoIdList?: (videoIdList: string[]) => void
   isHidden?: boolean
   onHiddenChange?: (isHidden: boolean) => void
   currentVideo?: Video | null
@@ -37,7 +41,10 @@ type FlipcoControllerProps = {
 const FlipcoController = ({
                             containerClassName,
                             youtubeElement,
+                            currentYoutubeVideoId,
+                            youtubeVideoIdList,
                             setYoutubeVideoId,
+                            setYoutubeVideoIdList,
                             isHidden,
                             onHiddenChange,
                             currentVideo,
@@ -49,10 +56,22 @@ const FlipcoController = ({
   const [title, setTitle] = useState<string>("")
   const [volume, setVolume] = useState<number>(100)
   const [lastVolume, setLastVolume] = useState<number>(0)
-  const [time, setTime] = useState<string>("00:00:00")
-  const [endTime, setEndTime] = useState<string>("00:00:00")
-  const [showPlaylist, setShowPlaylist] = useState(false)
+  const [time, setTime] = useState<number>(0)
+  const [endTime, setEndTime] = useState<number>(0)
+  const [showYoutubeList, setShowYoutubeList] = useState(false)
   const [showBackgroundVideos, setShowBackgroundVideos] = useState(false)
+
+  const clearYoutubeInfo = () => {
+    setTitle("")
+    setEndTime(0)
+  }
+
+  const moveYoutubeVideo = (videoId: string) => {
+    if (setYoutubeVideoId) {
+      clearYoutubeInfo()
+      setYoutubeVideoId(videoId)
+    }
+  }
 
   const onYoutubeAction = (action: YoutubeAction) => {
     if (!youtubeElement) return
@@ -66,10 +85,31 @@ const FlipcoController = ({
         youtubeElement.pauseVideo()
         break
       case "next":
-        setYoutubeVideoId("phRZKH1tQsQ")
+        if (youtubeVideoIdList
+          && currentYoutubeVideoId) {
+          const currentVideoIndex = youtubeVideoIdList.indexOf(currentYoutubeVideoId)
+          moveYoutubeVideo(youtubeVideoIdList[currentVideoIndex < youtubeVideoIdList.length - 1 ? currentVideoIndex + 1 : 0])
+        }
         break
       case "prev":
-        youtubeElement.loadVideoById("SJ_AqcH1OUQ")
+        if (youtubeVideoIdList
+          && currentYoutubeVideoId) {
+          const currentVideoIndex = youtubeVideoIdList.indexOf(currentYoutubeVideoId)
+          moveYoutubeVideo(youtubeVideoIdList[currentVideoIndex > 0 ? currentVideoIndex - 1 : youtubeVideoIdList.length - 1])
+        }
+        break
+      case "mute":
+        setVolume((prev) => {
+          youtubeElement.mute()
+          setLastVolume(prev)
+          return 0
+        })
+        break
+      case "unmute":
+        setVolume(({}) => {
+          youtubeElement.unMute()
+          return lastVolume
+        })
         break
     }
   }
@@ -91,7 +131,7 @@ const FlipcoController = ({
   }
 
   const togglePlaylist = () => {
-    setShowPlaylist(!showPlaylist)
+    setShowYoutubeList(!showYoutubeList)
   }
 
   const toggleBackgroundVideos = () => {
@@ -99,15 +139,11 @@ const FlipcoController = ({
   }
 
   const onVolumeButtonClickHandler = () => {
-    setVolume((prev) => {
-      if (prev === 0) {
-        setLastVolume(prev)
-        return lastVolume
-      } else {
-        setLastVolume(prev)
-        return 0
-      }
-    })
+    if (volume === 0) {
+      onYoutubeAction("unmute")
+    } else {
+      onYoutubeAction("mute")
+    }
   }
 
   const getTimeString = (seconds: number, addHour: boolean): string => {
@@ -123,14 +159,12 @@ const FlipcoController = ({
   }
 
   useEffect(() => {
-
     const interval = setInterval(async () => {
       if (youtubeElement && youtubeElement.getCurrentTime() >= 0) {
         setVolume(youtubeElement.getVolume())
         setTitle(youtubeElement.videoTitle)
-        const endTimeString = getTimeString(youtubeElement.getDuration(), false)
-        setEndTime(endTimeString)
-        setTime(getTimeString(youtubeElement.getCurrentTime(), endTimeString.length > 5))
+        setEndTime(youtubeElement.getDuration())
+        setTime(youtubeElement.getCurrentTime())
 
         const stateNumber = youtubeElement.playerInfo.playerState
         setYoutubeState(youtubePlayerStateMap[stateNumber.toString()])
@@ -142,10 +176,44 @@ const FlipcoController = ({
   }, [youtubeElement])
 
   useEffect(() => {
-    if (!youtubeElement) return
+    if (!isClient || !youtubeElement) return
     if (youtubeElement.getVolume() === volume) return
     youtubeElement.setVolume(volume)
-  }, [youtubeElement, volume])
+  }, [youtubeElement, volume, isClient])
+
+  const onYoutubeSelectionOnPlay = (youtubeVideoId: string) => {
+    if (currentYoutubeVideoId === youtubeVideoId) {
+      onYoutubeAction("play")
+    } else {
+      if (!setYoutubeVideoId) return
+      clearYoutubeInfo()
+      setYoutubeVideoId(youtubeVideoId)
+    }
+  }
+
+  const onYoutubeSelectionOnPause = (youtubeVideoId: string) => {
+    if (currentYoutubeVideoId === youtubeVideoId) {
+      onYoutubeAction("pause")
+    }
+  }
+
+  const onYoutubeSelectionOnAdd = (youtubeVideoId: string) => {
+    if (!isClient) return
+    if (!youtubeVideoIdList) return
+    if (youtubeVideoIdList.includes(youtubeVideoId)) return
+    if (setYoutubeVideoIdList) {
+      setYoutubeVideoIdList([...youtubeVideoIdList, youtubeVideoId])
+    }
+  }
+
+  const onYoutubeSelectionOnDelete = (youtubeVideoId: string) => {
+    if (currentYoutubeVideoId === youtubeVideoId) {
+      onYoutubeAction("next")
+      setYoutubeVideoIdList?.(youtubeVideoIdList?.filter((id) => id !== youtubeVideoId) ?? [])
+    } else {
+      setYoutubeVideoIdList?.(youtubeVideoIdList?.filter((id) => id !== youtubeVideoId) ?? [])
+    }
+  }
 
   if (!isClient) return null
 
@@ -177,14 +245,14 @@ const FlipcoController = ({
                    layout={"fullWidth"}
                    gap={"xSmall"}
         >
-          <Text typography={"body5"} color={"textDim"}>
-            {time}
+          <Text typography={"body5"} color={"textDim"} minWidth={"2rem"} isLoading={endTime == 0}>
+            {getTimeString(time, endTime >= 3600)}
           </Text>
           <Text typography={"body6"} color={"textDim2"}>
             /
           </Text>
-          <Text typography={"body5"} color={"textDim"}>
-            {endTime}
+          <Text typography={"body5"} color={"textDim"} minWidth={"3.2rem"} isLoading={endTime == 0}>
+            {getTimeString(endTime, false)}
           </Text>
         </Container>
         <YoutubeControl
@@ -194,6 +262,7 @@ const FlipcoController = ({
           onPause={onPauseHandler}
           onNext={onNextHandler}
           onPrev={onPrevHandler}
+          isMoveable={(youtubeVideoIdList?.length ?? 0) > 1}
         />
       </Container>
       <Container className={clsx(styles.itemContainer)}
@@ -220,13 +289,12 @@ const FlipcoController = ({
                   onClick={togglePlaylist}
           >
             <PlayListIcon className={clsx({
-              [styles.iconInvisible]: showPlaylist,
-              [styles.iconVisible]: !showPlaylist
+              [styles.iconInvisible]: showYoutubeList,
+              [styles.iconVisible]: !showYoutubeList
             })} />
             <FoldPlayListIcon className={clsx({
-              [styles.iconInvisible]: !showPlaylist,
-              [styles.iconVisible]: showPlaylist
-
+              [styles.iconInvisible]: !showYoutubeList,
+              [styles.iconVisible]: showYoutubeList
             })} />
           </Button>
           <Button color={"grayText"}
@@ -245,9 +313,16 @@ const FlipcoController = ({
           </Button>
         </Container>
       </Container>
-
-
-
+      <YoutubeSelection
+        currentYoutubeVideoId={currentYoutubeVideoId}
+        youtubeState={youtubeState}
+        youtubeVideoIdList={youtubeVideoIdList}
+        onYoutubeVideoPlay={onYoutubeSelectionOnPlay}
+        onYoutubeVideoPause={onYoutubeSelectionOnPause}
+        onYoutubeVideoAdd={onYoutubeSelectionOnAdd}
+        onYoutubeVideoDelete={onYoutubeSelectionOnDelete}
+        isVisible={showYoutubeList}
+      />
       <VideoSelection
         videos={videos}
         isVisible={showBackgroundVideos}
@@ -276,6 +351,7 @@ const FlipcoController = ({
                     onPause={onPauseHandler}
                     onNext={onNextHandler}
                     onPrev={onPrevHandler}
+                    isMoveable={(youtubeVideoIdList?.length ?? 0) > 1}
     />
   </Container>
 }

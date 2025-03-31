@@ -1,3 +1,4 @@
+import CloseIcon from "./CloseIcon"
 import FoldPlayListIcon from "./FoldPlayListIcon"
 import FoldVideoListIcon from "./FoldVideoListIcon"
 import FullSoundIcon from "./FullSoundIcon"
@@ -7,6 +8,7 @@ import NextIcon from "./NextIcon"
 import PauseIcon from "./PauseIcon"
 import PlayIcon from "./PlayIcon"
 import PlayListIcon from "./PlayListIcon"
+import PlusIcon from "./PlusIcon"
 import PrevIcon from "./PrevIcon"
 import SettingIcon from "./SettingIcon"
 import ShowIcon from "./ShowIcon"
@@ -30,4 +32,6 @@ export {
   PlayListIcon,
   FoldVideoListIcon,
   FoldPlayListIcon,
+  PlusIcon,
+  CloseIcon
 }

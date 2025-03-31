@@ -10,9 +10,10 @@ type SelectionContainerProps = {
   title?: string
   isVisible?: boolean
   items?: ReactNode[]
+  bottomItem?: ReactNode
 }
 
-const SelectionContainer = ({ title, isVisible, items }: SelectionContainerProps) => {
+const SelectionContainer = ({ title, isVisible, items, bottomItem }: SelectionContainerProps) => {
   const isClient = useIsClient()
 
   if (!isClient) return null
@@ -32,12 +33,13 @@ const SelectionContainer = ({ title, isVisible, items }: SelectionContainerProps
       <Container className={clsx(styles.itemContainer)}
                  alignment={"rowTopLeft"}>
         <Container className={clsx(styles.itemScrollContainer)}
-                   alignment={"rowTopLeft"} gap={"large"}>
+                   alignment={"rowTopLeft"} gap={"xLarge"}>
           <div className={clsx(styles.itemSpacer)} />
           {items?.map((item) => item)}
           <div className={clsx(styles.itemSpacer)} />
         </Container>
       </Container>
+      {bottomItem}
     </Container>
   </Container>
 }

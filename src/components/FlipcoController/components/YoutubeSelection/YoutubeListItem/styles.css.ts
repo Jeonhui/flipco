@@ -8,8 +8,8 @@ const withAlpha = (color: Color, alpha: number): string => {
 
 export const videoItemContainer = style({
   position: "relative",
-  width: "14rem",
-  height: "9rem",
+  width: "10.5rem",
+  height: "6.75rem",
   scrollSnapAlign: "center",
   borderRadius: theme.spaces.small,
   overflow: "hidden",
@@ -23,9 +23,18 @@ export const videoItemContainer = style({
 
 
 export const videoItemThumbnail = style({
+  transition: "opacity 0.3s ease",
   width: "100%",
   height: "100%",
   objectFit: "cover"
+})
+
+export const videoItemThumbnailInvisible = style({
+  opacity: 0
+})
+
+export const videoItemThumbnailVisible = style({
+  opacity: 1
 })
 
 export const videoItemBottomEffect = style({
@@ -44,7 +53,7 @@ export const videoThumbnailOverlay = style({
   width: "100%",
   height: "100%",
   background: theme.colors.background,
-  opacity: 0.5
+  opacity: 0.2
 })
 
 export const videoItemPlayButton = style({
@@ -80,4 +89,19 @@ export const iconInvisible = style({
 
 export const iconVisible = style({
   opacity: 1
+})
+
+export const videoItemDeleteButton = style({
+  position: "absolute",
+  top: "0.2rem",
+  right: "0.2rem",
+  transition: "opacity 0.3s ease",
+  borderRadius: theme.spaces.xSmall,
+  padding: theme.spaces.xSmall,
+  zIndex: theme.zIndices.overlay
+})
+
+globalStyle(`${videoItemPlayButton} svg`, {
+  width: "2rem",
+  height: "2rem"
 })
