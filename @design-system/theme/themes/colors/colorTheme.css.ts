@@ -465,8 +465,8 @@ const darkModeThemeColors: ColorTheme = {
 
   gradient: {
     primaryStart: colorSetVars.primary50,
-    start: colorSetVars.gray900,
-    end: colorSetVars.primary400
+    start: colorSetVars.primary500,
+    end: colorSetVars.primary300
   },
 
   system: {

@@ -64,17 +64,10 @@ export const controlPanel = style({
   overflow: "hidden",
   bottom: "0.5rem",
 
-  // MARK: - Prod
-  // width: "100%",
-  // transitionDelay: "0.4s",
-  // padding: "0",
-  // maxHeight: "0.5rem",
-
-  // MARK: - Dev
-  width: "20rem",
-  transitionDelay: "0s",
-  padding: "1rem",
-  maxHeight: "calc(100svh - 1rem)",
+  width: "100%",
+  transitionDelay: "0.4s",
+  padding: "0",
+  maxHeight: "0.5rem",
 
   "@media": {
     "screen and (max-width: 480px)": {
@@ -104,8 +97,7 @@ export const controlPanel = style({
 globalStyle(`${controlPanel} > *`, {
   transition: "opacity 0.3s ease-in-out",
   transitionDelay: "0.4s",
-  // opacity: 0
-  opacity: 1 // MARK: - Dev
+  opacity: 0
 })
 
 globalStyle(`${controlPanel}:hover > *`, {

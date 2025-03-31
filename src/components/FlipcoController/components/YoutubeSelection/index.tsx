@@ -1,7 +1,7 @@
 "use client"
 
 import SelectionContainer from "@/components/FlipcoController/components/SelectionContainer"
-import React, { useEffect } from "react"
+import React from "react"
 import YoutubeListItem from "./YoutubeListItem"
 import { YoutubePlayerState } from "@/components/FlipcoController/types"
 import YoutubeInput from "@/components/FlipcoController/components/YoutubeSelection/YoutubeInput"

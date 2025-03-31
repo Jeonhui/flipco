@@ -14,6 +14,7 @@ import YoutubeControl from "./components/YoutubeControl"
 import { Video } from "@/types"
 import VideoSelection from "@/components/FlipcoController/components/VideoSelection"
 import YoutubeSelection from "@/components/FlipcoController/components/YoutubeSelection"
+import TimeSlider from "@/components/FlipcoController/components/TimeSlider"
 
 const youtubePlayerStateMap: { [key in string]: YoutubePlayerState } = {
   "-1": "unstarted",
@@ -60,6 +61,8 @@ const FlipcoController = ({
   const [endTime, setEndTime] = useState<number>(0)
   const [showYoutubeList, setShowYoutubeList] = useState(false)
   const [showBackgroundVideos, setShowBackgroundVideos] = useState(false)
+
+  const [isChangeTime, setIsChangeTime] = useState(false)
 
   const clearYoutubeInfo = () => {
     setTitle("")
@@ -138,6 +141,12 @@ const FlipcoController = ({
     setShowBackgroundVideos(!showBackgroundVideos)
   }
 
+
+  const onTimeSlidingEnd = (time: number) => {
+    if (!youtubeElement) return
+    youtubeElement.seekTo(time)
+  }
+
   const onVolumeButtonClickHandler = () => {
     if (volume === 0) {
       onYoutubeAction("unmute")
@@ -164,8 +173,9 @@ const FlipcoController = ({
         setVolume(youtubeElement.getVolume())
         setTitle(youtubeElement.videoTitle)
         setEndTime(youtubeElement.getDuration())
-        setTime(youtubeElement.getCurrentTime())
-
+        if (!isChangeTime) {
+          setTime(youtubeElement.getCurrentTime())
+        }
         const stateNumber = youtubeElement.playerInfo.playerState
         setYoutubeState(youtubePlayerStateMap[stateNumber.toString()])
       }
@@ -173,6 +183,7 @@ const FlipcoController = ({
     return () => {
       clearInterval(interval)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [youtubeElement])
 
   useEffect(() => {
@@ -240,6 +251,14 @@ const FlipcoController = ({
           lineClamp={1}
           typography={"body2"}>{title}</Text>
 
+        <TimeSlider
+          min={0}
+          max={endTime}
+          value={time}
+          onChange={setTime}
+          onSlidingEnd={onTimeSlidingEnd}
+          isSliding={isChangeTime}
+          setIsSliding={setIsChangeTime} />
         <Container className={clsx(styles.timeContainer)}
                    alignment={"rowCenterLeft"}
                    layout={"fullWidth"}
@@ -251,7 +270,7 @@ const FlipcoController = ({
           <Text typography={"body6"} color={"textDim2"}>
             /
           </Text>
-          <Text typography={"body5"} color={"textDim"} minWidth={"3.2rem"} isLoading={endTime == 0}>
+          <Text typography={"body5"} color={"textDim"} minWidth={"2rem"} isLoading={endTime == 0}>
             {getTimeString(endTime, false)}
           </Text>
         </Container>
