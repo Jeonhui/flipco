@@ -28,6 +28,18 @@ const templateVideos: { [key in string]: Video } = {
     name: "fire",
     thumbnail: "/video/thumbnail/fire.png",
     type: "video/mp4"
+  },
+  "thunder": {
+    src: "/video/thunder.mp4",
+    name: "thunder",
+    thumbnail: "/video/thumbnail/thunder.png",
+    type: "video/mp4"
+  },
+  "sky": {
+    src: "/video/sky.mp4",
+    name: "sky",
+    thumbnail: "/video/thumbnail/sky.png",
+    type: "video/mp4"
   }
 }
 

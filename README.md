@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Flipco
+https://flipco.jeonhui.com
 
-## Getting Started
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```text
+A simple and aesthetic webpage
+that displays a flip clock 
+and features an embedded YouTube playlist for background music.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<img src="./images/screenshot/main.png" alt="main" style="width:512px; border-radius: 4px;" />
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+--- 
 
-To learn more about Next.js, take a look at the following resources:
+## Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### youtube video player
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+<img src="./images/screenshot/youtube_pip.png" alt="main" style="width:256px; border-radius: 4px;" />
 
-## Deploy on Vercel
+**Feature**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **hide**  (<img src="./images/icon/Hide.png" alt="hide icon" style="width:12px; height: 12px" />) & **show** (<img src="./images/icon/Show.png" alt="show icon" style="width:12px; height: 12px" />)
+- **control opacity** with slider
+- **resize** & **move** the player
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<br/>
+
+### youtube video controller
+
+<img src="./images/screenshot/youtube_controller.png" alt="main" style="width:160px; border-radius: 4px;" />
+
+**Feature**
+
+- **play** (<img src="./images/icon/Play.png" alt="play icon" style="width:12px; height: 12px" />) & **pause** (<img src="./images/icon/Pause.png" alt="pause icon" style="width:12px; height: 12px" />)
+- **next** (<img src="./images/icon/Next.png" alt="next icon" style="width:12px; height: 12px" />) & **previous** (<img src="./images/icon/Prev.png" alt="prev icon" style="width:12px; height: 12px" />)
+
+<br/>
+
+### control panel
+It can be used by hovering on the bar under the controller
+
+<img src="./images/screenshot/control_panel.png" alt="main" style="width:180px; border-radius: 4px;" />
+
+**Feature**
+
+- **play** (<img src="./images/icon/Play.png" alt="play icon" style="width:12px; height: 12px" />) & **pause** (<img src="./images/icon/Pause.png" alt="pause icon" style="width:12px; height: 12px" />)
+- **next** (<img src="./images/icon/Next.png" alt="next icon" style="width:12px; height: 12px" />) & **previous** (<img src="./images/icon/Prev.png" alt="prev icon" style="width:12px; height: 12px" />)
+- playback **seek** with a slider
+- **control volume** with slider
+
+**youtube list & background video list**
+
+<img src="./images/screenshot/control_panel_extend.png" alt="main" style="width:180px; border-radius: 4px;" />
+
+- select **youtube video** from the list
+- add & delete **youtube video** from the list
+- select **background video** from the list
+
+
+<br/>
+
+---
+
+### Tech Stack:
+
+**Frontend**: React, Next.js
+
+**Styling**: CSS Modules, Vanilla Extract CSS
+
+**Other Tools**: TypeScript, ESLint
+
+<br/>
+
+### Key Info:
+
+**Website**: https://flipco.jeonhui.com
+
+**Version**: 1.0.0
+
+**Technologies Used**: React, Next.js, TypeScript, ESLint, and more
+
+<br/>
+
+---
+
+<br/>
+
+### Contact:
+
+l06094@gmail.com
