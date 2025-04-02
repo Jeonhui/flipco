@@ -6,7 +6,7 @@ const INFO = {
   DESCRIPTION: "Code With Flipco",
   FAVICON: "/favicon.png",
   PREVIEW_IMAGE: {
-    url: "https://flipco.jeonhui.com/preview.png",
+    url: "/preview.png",
     alt: "Flipco",
     width: "1200px",
     height: "628px",
