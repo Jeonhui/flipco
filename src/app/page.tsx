@@ -40,6 +40,12 @@ const templateVideos: { [key in string]: Video } = {
     name: "sky",
     thumbnail: "/video/thumbnail/sky.png",
     type: "video/mp4"
+  },
+  "waterfall": {
+    src: "/video/waterfall.mp4",
+    name: "waterfall",
+    thumbnail: "/video/thumbnail/waterfall.png",
+    type: "video/mp4"
   }
 }
 
